@@ -1,28 +1,23 @@
 <template>
-    <q-card :class="$q.dark.isActive ? 'bg-dark text-white' : ''">
-      <q-card-section class="text-h6">
-        Total de solicitudes Finalizadas
-        <q-btn icon="fa-solid fa-download" class="float-right" flat dense @click="saveImage">
-          <q-tooltip>Descargar Grafica PNG</q-tooltip>
-        </q-btn>
-      </q-card-section>
-  
-      <q-card-section class="q-pa-none">
-        <v-chart
-          class="chart"
-          :option="chartOption"
-          autoresize
-          style="height: 350px; width: 100%;"
-        />
-      </q-card-section>
-    </q-card>
-  </template>
-  
-  <script setup>
-  import { useQuasar } from 'quasar';
-  import { ref, watch, provide, computed } from 'vue';
-  import VChart, { THEME_KEY } from 'vue-echarts';
-  import { use } from 'echarts/core'
+  <q-card :class="$q.dark.isActive ? 'bg-dark text-white' : ''">
+    <q-card-section class="text-h6">
+      Total de solicitudes Finalizadas
+      <q-btn icon="fa-solid fa-download" class="float-right" flat dense @click="saveImage">
+        <q-tooltip>Descargar Grafica PNG</q-tooltip>
+      </q-btn>
+    </q-card-section>
+
+    <q-card-section class="q-pa-none">
+      <v-chart class="chart" :option="chartOption" autoresize style="height: 350px; width: 100%;" />
+    </q-card-section>
+  </q-card>
+</template>
+
+<script setup>
+import { useQuasar } from 'quasar';
+import { ref, watch, provide, computed } from 'vue';
+import VChart, { THEME_KEY } from 'vue-echarts';
+import { use } from 'echarts/core'
 import { BarChart } from 'echarts/charts'
 import {
   DatasetComponent,
@@ -38,15 +33,15 @@ use([
   BarChart,
   CanvasRenderer
 ])
-  
-  const $q = useQuasar();
-  provide(THEME_KEY, 'light');
-  
-  const props = defineProps({
+
+const $q = useQuasar();
+provide(THEME_KEY, 'light');
+
+const props = defineProps({
   chartData3: {
     type: Object,
     required: false,
-    default: () => ({ nombres: [], totales: [] }), 
+    default: () => ({ nombres: [], totales: [] }),
   },
 });
 
@@ -60,16 +55,16 @@ const chartDataFormatted = computed(() => {
   }
 });
 
-  const chartOption = ref({ 
-    dataset: {
-        source: [
+const chartOption = ref({
+  dataset: {
+    source: [
       ['Total', 'Nombre'], // headers for clarity
       ...chartDataFormatted.value // spread the formatted data
     ]
   },
   grid: { containLabel: true },
-  xAxis: { name: 'amount' },
-  yAxis: { type: 'category' },  
+  xAxis: { name: 'Total' },
+  yAxis: { type: 'category' },
   series: [
     {
       type: 'bar',
@@ -80,17 +75,17 @@ const chartDataFormatted = computed(() => {
         y: 'product'
       },
       itemStyle: {
-            color: (params) => ['#FF5733', '#3498DB', '#2ECC71', '#F1C40F', '#9B59B6'][params.dataIndex % 5]
-          }
+        color: (params) => ['#FF5733', '#3498DB', '#2ECC71', '#F1C40F', '#9B59B6'][params.dataIndex % 5]
+      }
     }
   ]
-  });  
-  function saveImage() {
-    $q.notify({ message: 'Functionality to download not implemented yet' });
-  }
+});
+function saveImage() {
+  $q.notify({ message: 'Functionality to download not implemented yet' });
+}
 
 watch(
-  () => props.chartData3, 
+  () => props.chartData3,
   async (newValue, oldValue) => {
     // Ensure newValue exists and has data
     if (newValue && newValue.nombres.length > 0) {
@@ -110,11 +105,6 @@ watch(
     }
   }
 );
-  </script>
-  
-  <style lang="scss" scoped>
-  .chart {
-    height: 250px; /* Adjust as needed */
-  }
-  </style>
-  
+</script>
+
+<style lang="scss" scoped></style>

@@ -8,12 +8,7 @@
     </q-card-section>
 
     <q-card-section class="q-pa-none">
-      <v-chart
-        class="chart"
-        :option="chartOption"
-        autoresize
-        style="height: 250px;"
-      />
+      <v-chart class="chart" :option="chartOption" autoresize style="height: 350px; width: 100%;" />
     </q-card-section>
   </q-card>
 </template>
@@ -41,7 +36,7 @@ provide(THEME_KEY, 'light');
 const props = defineProps({
   chartData2: {
     type: Object,
-    required: false, 
+    required: false,
     default: () => ({ nombres: [], totales: [] }),
   },
 });
@@ -72,13 +67,13 @@ const chartOption = ref({
         },
       },
     },
-  ], 
+  ],
   series: [
     {
       name: 'Solicitudes',
       type: 'pie',
-      radius: '80%',
-      center: ['50%', '60%'],
+      radius: '85%',
+      center: ['50%', '50%'],
       data: [],
       emphasis: {
         itemStyle: {
@@ -94,7 +89,7 @@ const chartOption = ref({
 watch(
   () => props.chartData2,
   (newChartData) => {
-    if (newChartData && newChartData.nombres && newChartData.nombres.length > 0) { 
+    if (newChartData && newChartData.nombres && newChartData.nombres.length > 0) {
       chartOption.value.series[0].data = newChartData.nombres.map((nombre, index) => ({
         value: newChartData.totales[index],
         name: nombre,
@@ -103,10 +98,10 @@ watch(
     } else {
       chartOption.value.series[0].data = [];
       chartOption.value.legend.data = [];
-      console.log("Empty or undefined chart data received."); 
+      console.log("Empty or undefined chart data received.");
     }
   },
-  { deep: true, immediate: true } 
+  { deep: true, immediate: true }
 );
 
 
@@ -115,8 +110,4 @@ function saveImage() {
 }
 </script>
 
-<style lang="scss" scoped>
-.chart {
-  height: 250px; /* Adjust as needed */
-}
-</style>
+<style lang="scss" scoped></style>

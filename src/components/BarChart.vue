@@ -1,5 +1,4 @@
 <template>
-  <div>
     <q-card :class="$q.dark.isActive ? 'bg-dark' : ''">
       <q-card-section class="text-h6">
         Total de solicitudes por Tipo
@@ -8,10 +7,9 @@
         </q-btn>
       </q-card-section>
       <q-card-section>
-        <ECharts ref="barchart" :option="options" class="q-mt-md" :resizable="true" autoresize style="height: 350px; width: 100%;" />
+        <ECharts ref="barchart" :option="options" autoresize style="height: 350px; width: 100%;" />
       </q-card-section>
     </q-card>
-  </div>
 </template>
 
 <script>
@@ -83,6 +81,4 @@ export default {
 </script>
 
 
-<style scoped>
-
-</style>
+<style scoped></style>

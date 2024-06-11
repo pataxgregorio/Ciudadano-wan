@@ -1,15 +1,17 @@
 <template>
-  <div class="container q-pa-md">
-    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-      <bar-chart :chartData = "chartData"></bar-chart>
-    </div>
-    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+  <q-page class="">
+    <div class="row q-col-gutter-sm q-ml-xs q-mr-sm q-py-sm">
+      <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+        <bar-chart :chartData = "chartData"></bar-chart>
+      </div>
+      <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
         <pie-chart :chartData2="chartData2"></pie-chart>
-    </div>
-    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+      </div>
+      <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
         <simpleencode-chart :chartData3="chartData3"></simpleencode-chart>
+      </div>
     </div>
-  </div>
+  </q-page>
 </template>
 
 <script>
