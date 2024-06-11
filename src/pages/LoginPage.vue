@@ -32,7 +32,7 @@ async function login() {
   error.value = null; // Limpiar mensaje de error anterior
 
   try {
-    const response = await axios.post("http://localhost:3000/login", {
+    const response = await axios.post("http://192.168.0.120:3000/login", {
       email: email.value, // Usa "email"
       password: password.value,
     });

@@ -2,103 +2,87 @@
   <div>
     <q-card :class="$q.dark.isActive ? 'bg-dark' : ''">
       <q-card-section class="text-h6">
-        Bar Chart
-        <q-btn
-          icon="fa fa-download"
-          class="float-right"
-          @click="saveImage"
-          flat
-          dense
-        >
-          <q-tooltip>Download PNG</q-tooltip>
+        Total de solicitudes por Tipo
+        <q-btn icon="fa fa-download" class="float-right" @click="saveImage" flat dense>
+          <q-tooltip>Descargar Grafica PNG</q-tooltip>
         </q-btn>
       </q-card-section>
       <q-card-section>
-        <ECharts
-          ref="barChart"
-          :option="options"
-          class="q-mt-md"
-          :resizable="true"
-          autoresize
-          style="height: 250px"
-        />
+        <ECharts ref="barchart" :option="options" class="q-mt-md" :resizable="true" autoresize style="height: 350px; width: 100%;" />
       </q-card-section>
     </q-card>
   </div>
 </template>
 
 <script>
-import ECharts from "vue-echarts";
-import { use } from "echarts/core";
-import { CanvasRenderer } from "echarts/renderers";
-import { BarChart } from "echarts/charts";
-import {
-  GridComponent,
-  TooltipComponent,
-  LegendComponent,
-} from "echarts/components";
-import { useQuasar } from "quasar";
+import * as echarts from 'echarts/core';
+import { CanvasRenderer } from 'echarts/renderers';
+import { BarChart } from 'echarts/charts';
+import { TitleComponent, TooltipComponent, GridComponent, LegendComponent } from 'echarts/components';
+import ECharts from 'vue-echarts';
+import { useQuasar } from 'quasar';
 
-use([
-  CanvasRenderer,
-  BarChart,
-  GridComponent,
-  TooltipComponent,
-  LegendComponent,
-]);
+
+echarts.use([TitleComponent, TooltipComponent, GridComponent, BarChart, CanvasRenderer, LegendComponent]);
 
 export default {
   name: "BarChart",
   components: { ECharts },
+  props: {
+    chartData: { type: Object, required: true, default: () => ({ nombres: [], totales: [] }) }
+  },
   data() {
-    const $q = useQuasar();
     return {
-      $q,
+      $q: useQuasar(),
       options: {
-        legend: {
-          bottom: 10,
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'shadow'
+          },
+          formatter: (params) => `${params[0].axisValue}: ${params[0].value}`
         },
-        tooltip: {},
-        dataset: {
-          source: [
-            ["Product", "2015", "2016", "2017"],
-            ["Matcha Latte", 43.3, 85.8, 93.7],
-            ["Milk Tea", 83.1, 73.4, 55.1],
-            ["Cheese Cocoa", 86.4, 65.2, 82.5],
-            ["Walnut Brownie", 72.4, 53.9, 39.1],
-          ],
+        xAxis: {
+          type: 'category',
+          data: []
         },
-        grid: {
-          left: "3%",
-          right: "4%",
-          bottom: "20%",
-          top: "5%",
-          containLabel: true,
+        yAxis: {
+          type: 'value'
         },
-        xAxis: { type: "category" },
-        yAxis: {},
-        series: [{ type: "bar" }, { type: "bar" }, { type: "bar" }],
-      },
+        series: [{
+          itemStyle: {
+            color: (params) => ['#FF5733', '#3498DB', '#2ECC71', '#F1C40F', '#9B59B6'][params.dataIndex % 5]
+          },
+          data: [],
+          type: 'bar'
+        }]
+      }
     };
   },
   watch: {
-    "$q.dark.isActive": function () {
-      this.$refs.barChart.setOption(this.options); // Update chart when theme changes
-    },
+    chartData: {
+      handler(newChartData) {
+        this.options.xAxis.data = newChartData.nombres;
+        this.options.series[0].data = newChartData.totales;
+      },
+      deep: true
+    }
   },
   methods: {
     saveImage() {
-      const linkSource = this.$refs.barChart.getDataURL();
-      const downloadLink = document.createElement("a");
+      const linkSource = this.$refs.barchart.getDataURL();
+      const downloadLink = document.createElement('a');
       document.body.appendChild(downloadLink);
-
       downloadLink.href = linkSource;
-      downloadLink.target = "_self";
-      downloadLink.download = "bar-chart.png";
+      downloadLink.target = '_self';
+      downloadLink.download = 'BarChart.png';
       downloadLink.click();
-    },
-  },
+    }
+  }
 };
 </script>
 
-<style scoped></style>
+
+<style scoped>
+
+</style>
