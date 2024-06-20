@@ -19,6 +19,11 @@ const routes = [
         component: () => import("pages/IndexPage.vue"),
         meta: { requiresAuth: true },
       },
+      {
+        path: "/consulta",
+        component: () => import("pages/ConsultarSolicitud.vue"),
+        meta: { requiresAuth: true },
+      },
     ],
   },
   {

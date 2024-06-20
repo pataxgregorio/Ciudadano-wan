@@ -1,14 +1,14 @@
 <template>
   <q-card :class="$q.dark.isActive ? 'bg-dark text-white' : ''">
     <q-card-section class="text-h6">
-      Total de solicitudes en Proceso
+      Solicitudes en Proceso
       <q-btn icon="fa-solid fa-download" class="float-right" flat dense @click="saveImage">
         <q-tooltip>Descargar Grafica PNG</q-tooltip>
       </q-btn>
     </q-card-section>
 
     <q-card-section class="q-pa-none">
-      <v-chart class="chart" :option="chartOption" autoresize style="height: 350px; width: 100%;" />
+      <v-chart class="chart" :option="chartOption" autoresize style="height: 380px; width: 100%;" />
     </q-card-section>
   </q-card>
 </template>
@@ -43,7 +43,6 @@ const props = defineProps({
 
 const chartOption = ref({
   title: {
-    text: 'Total de Solicitudes',
     left: 'center',
   },
   tooltip: {
@@ -65,14 +64,14 @@ const chartOption = ref({
         legend: {
           show: false,
         },
-      },
+      }
     },
   ],
   series: [
     {
       name: 'Solicitudes',
       type: 'pie',
-      radius: '85%',
+      radius: '84%',
       center: ['50%', '50%'],
       data: [],
       emphasis: {
@@ -98,7 +97,6 @@ watch(
     } else {
       chartOption.value.series[0].data = [];
       chartOption.value.legend.data = [];
-      console.log("Empty or undefined chart data received.");
     }
   },
   { deep: true, immediate: true }

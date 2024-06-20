@@ -1,7 +1,7 @@
 <template>
   <q-card :class="$q.dark.isActive ? 'bg-dark text-white' : ''">
     <q-card-section class="text-h6">
-      Total de solicitudes Finalizadas
+      Analisis de Solicitudes Finalizadas
       <q-btn icon="fa-solid fa-download" class="float-right" flat dense @click="saveImage">
         <q-tooltip>Descargar Grafica PNG</q-tooltip>
       </q-btn>

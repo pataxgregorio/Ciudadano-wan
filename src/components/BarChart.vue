@@ -1,15 +1,15 @@
 <template>
-    <q-card :class="$q.dark.isActive ? 'bg-dark' : ''">
-      <q-card-section class="text-h6">
-        Total de solicitudes por Tipo
-        <q-btn icon="fa fa-download" class="float-right" @click="saveImage" flat dense>
-          <q-tooltip>Descargar Grafica PNG</q-tooltip>
-        </q-btn>
-      </q-card-section>
-      <q-card-section>
-        <ECharts ref="barchart" :option="options" autoresize style="height: 350px; width: 100%;" />
-      </q-card-section>
-    </q-card>
+  <q-card :class="$q.dark.isActive ? 'bg-dark' : ''">
+    <q-card-section class="text-h6">
+      Estadisticas de Solicitudes
+      <q-btn icon="fa fa-download" class="float-right" @click="saveImage" flat dense>
+        <q-tooltip>Descargar Grafica PNG</q-tooltip>
+      </q-btn>
+    </q-card-section>
+    <q-card-section>
+      <ECharts ref="barchart" :option="options" autoresize style="height: 350px; width: 100%;" />
+    </q-card-section>
+  </q-card>
 </template>
 
 <script>
@@ -49,7 +49,7 @@ export default {
         },
         series: [{
           itemStyle: {
-            color: (params) => ['#FF5733', '#3498DB', '#2ECC71', '#F1C40F', '#9B59B6'][params.dataIndex % 5]
+            color: (params) => ['#FF5733', '#3498DB', '#2ECC71', '#F1C40F', '#9B59B6',][params.dataIndex % 5]
           },
           data: [],
           type: 'bar'
