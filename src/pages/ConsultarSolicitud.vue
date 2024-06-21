@@ -25,6 +25,18 @@
         <div v-else>
             Ingresa un número de cédula o solicitud para buscar.
         </div>
+
+    </div>
+
+    <div class="q-pa-md column items-center">
+        <q-table v-if="mostrarDenunciaReclamo" flat bordered :rows="solicitudes" :columns="mobileColumns" row-key="id"
+            :pagination="{ rowsPerPage: 0 }" class="responsive-table" style="text-align: center;">
+            <template v-slot:body-cell-acciones="props">
+                <q-td :props="props" class="text-center">
+                    <q-btn size="sm" color="primary" label="Ver" @click="verSolicitud(props.row.id)" />
+                </q-td>
+            </template>
+        </q-table>
     </div>
 
     <q-dialog v-model="mostrarDialogoSeguimiento">
@@ -76,7 +88,7 @@ const columns = [
     { name: 'solicitante', label: 'Solicitante', field: 'solicitante', sortable: true },
     { name: 'nombretipo', label: 'Tipo de Solicitud', field: 'nombretipo' },
     { name: 'Analista', label: 'Analista', field: 'analista' },
-    { name: 'direccionnombre', label: 'Dirección', field: 'direccionnombre' },
+    { name: 'comuna', label: 'Comuna', field: 'comuna' },
     { name: 'nombrestatus', label: 'Estatus', field: 'nombrestatus' },
     { name: 'acciones', label: 'Acciones' } // Nueva columna para el botón "Ver"
 ];
@@ -86,13 +98,16 @@ const mobileColumns = $q.screen.lt.sm ? [
     { name: 'id', label: 'Nro Solicitud', field: 'id', sortable: true },
     { name: 'solicitante', label: 'Solicitante', field: 'solicitante', sortable: true },
     { name: 'Analista', label: 'Analista', field: 'analista' },
+    { name: 'comuna', label: 'Comuna', field: 'comuna' },
     { name: 'nombrestatus', label: 'Estatus', field: 'nombrestatus' },
     { name: 'acciones', label: '' }, // Columna solo para el botón
 ] : columns; // Usa las columnas originales para pantallas más grandes
 
 const mostrarDialogoSeguimiento = ref(false);
+const mostrarDenunciaReclamo = ref(false);
 const seguimientoSeleccionado = ref([]);
 const solicitudSeleccionada = ref({});
+const tipoSolicitud = ref(null);
 
 const columnsSeguimiento = [
     { name: 'item', label: 'Item', field: 'item' },
@@ -116,29 +131,38 @@ const formatDate = (fechaISO) => {
     return `${dia}-${mes}-${año} ${hora}:${minutos}`;
 };
 
-const verSolicitud = async (id) => {
+const fetchData = async (tipoSolicitud) => {
     try {
-        const response = await axios.get(`http://192.168.0.120:8000/seguimiento/list2`, {
-            params: { params: id }
+        const response = await axios.get('http://192.168.0.120:8000/solicitud/list2', {
+            params: { params: search.value }
         });
 
-        solicitudSeleccionada.value = response.data[0] || {}; // Toma el primer elemento o un objeto vacío si no hay datos
-        seguimientoSeleccionado.value = JSON.parse(solicitudSeleccionada.value.Seguimiento || '[]'); // Parsea el seguimiento o inicializa un arreglo vacío
-
-        mostrarDialogoSeguimiento.value = true;
+        solicitudes.value = response.data;
+        tipoSolicitud.value = response.data[0] || {};
+        console.log(tipoSolicitud.value);
+        return tipoSolicitud;
     } catch (error) {
         console.error("Error fetching data:", error);
         // Manejo de errores (mostrar notificación al usuario, etc.)
     }
 };
-const fetchData = async () => {
+const verSolicitud = async (id, tipoSolicitud) => {
     try {
-        const response = await axios.get('http://192.168.0.120:8000/solicitud/list2', {
-            params: {
-                params: search.value // Envía el valor de búsqueda al backend
-            }
-        });
-        solicitudes.value = response.data;
+        await fetchData();
+        console.log(tipoSolicitud.nombretipo);
+        if (tipoSolicitud.nombretipo === 'RECLAMO') {
+            mostrarDenunciaReclamo.value = true;
+            console.log(solicitudes.value);
+        }
+        else {
+            const response = await axios.get(`http://192.168.0.120:8000/seguimiento/list2`, {
+                params: { params: id }
+            });
+
+            solicitudSeleccionada.value = response.data[0] || {}; // Toma el primer elemento o un objeto vacío si no hay datos
+            seguimientoSeleccionado.value = JSON.parse(solicitudSeleccionada.value.Seguimiento || '[]'); // Parsea el seguimiento o inicializa un arreglo vacío
+            mostrarDialogoSeguimiento.value = true;
+        }
     } catch (error) {
         console.error("Error fetching data:", error);
         // Manejo de errores (mostrar notificación al usuario, etc.)

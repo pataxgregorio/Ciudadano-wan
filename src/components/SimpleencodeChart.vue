@@ -81,7 +81,13 @@ const chartOption = ref({
   ]
 });
 function saveImage() {
-  $q.notify({ message: 'Functionality to download not implemented yet' });
+  const linkSource = this.$refs.barchart.getDataURL();
+  const downloadLink = document.createElement('a');
+  document.body.appendChild(downloadLink);
+  downloadLink.href = linkSource;
+  downloadLink.target = '_self';
+  downloadLink.download = 'BarChart.png';
+  downloadLink.click();
 }
 
 watch(

@@ -104,7 +104,30 @@ watch(
 
 
 function saveImage() {
-  $q.notify({ message: 'Functionality to download not implemented yet' });
+  try {
+    const chart = this.$refs.chart.chart;
+    if (!chart) {
+      throw new Error('Chart not initialized yet.');
+    }
+    const dataURL = chart.getDataURL({
+      type: 'png',
+      pixelRatio: 2, // Increase resolution for better quality
+      backgroundColor: this.$q.dark.isActive ? '#1d1d1d' : '#ffffff', // Match card background
+    });
+
+    const link = document.createElement('a');
+    link.href = dataURL;
+    link.download = 'PieChart.png';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  } catch (error) {
+    console.error('Error saving chart image:', error);
+    this.$q.notify({
+      type: 'negative',
+      message: 'Error al descargar la gráfica. Inténtalo nuevamente.'
+    });
+  }
 }
 </script>
 
