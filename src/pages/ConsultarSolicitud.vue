@@ -81,6 +81,11 @@ import { useQuasar } from 'quasar';
 const $q = useQuasar();
 const search = ref('');
 const solicitudes = ref([]);
+const mostrarDialogoSeguimiento = ref(false);
+const mostrarDenunciaReclamo = ref(false);
+const seguimientoSeleccionado = ref([]);
+const solicitudSeleccionada = ref({});
+const tipoSolicitud = ref(null);
 
 // Definición de columns ANTES de mobileColumns
 const columns = [
@@ -102,12 +107,6 @@ const mobileColumns = $q.screen.lt.sm ? [
     { name: 'nombrestatus', label: 'Estatus', field: 'nombrestatus' },
     { name: 'acciones', label: '' }, // Columna solo para el botón
 ] : columns; // Usa las columnas originales para pantallas más grandes
-
-const mostrarDialogoSeguimiento = ref(false);
-const mostrarDenunciaReclamo = ref(false);
-const seguimientoSeleccionado = ref([]);
-const solicitudSeleccionada = ref({});
-const tipoSolicitud = ref(null);
 
 const columnsSeguimiento = [
     { name: 'item', label: 'Item', field: 'item' },
@@ -131,36 +130,36 @@ const formatDate = (fechaISO) => {
     return `${dia}-${mes}-${año} ${hora}:${minutos}`;
 };
 
-const fetchData = async (tipoSolicitud) => {
+const fetchData = async () => {
     try {
         const response = await axios.get('http://192.168.0.120:8000/solicitud/list2', {
             params: { params: search.value }
         });
 
         solicitudes.value = response.data;
-        tipoSolicitud.value = response.data[0] || {};
-        console.log(tipoSolicitud.value);
-        return tipoSolicitud;
+        if (solicitudes.value.length > 0) { // Check if solicitudes is not empty
+            tipoSolicitud.value = solicitudes.value[0]; // Assign the first solicitud
+        } else {
+            tipoSolicitud.value = null; // Handle the case where no solicitudes are found
+        }
     } catch (error) {
         console.error("Error fetching data:", error);
         // Manejo de errores (mostrar notificación al usuario, etc.)
     }
 };
-const verSolicitud = async (id, tipoSolicitud) => {
+
+const verSolicitud = async (id) => {
     try {
-        await fetchData();
-        console.log(tipoSolicitud.nombretipo);
-        if (tipoSolicitud.nombretipo === 'RECLAMO') {
+        await fetchData(); // Ensure fetchData is called before accessing tipoSolicitud.value
+        if (tipoSolicitud.value.nombretipo === 'DENUNCIA' || tipoSolicitud.value.nombretipo === 'RECLAMO' || tipoSolicitud.value.nombretipo === 'QUEJA') { // Check if tipoSolicitud.value is not null
             mostrarDenunciaReclamo.value = true;
             console.log(solicitudes.value);
-        }
-        else {
+        } else {
             const response = await axios.get(`http://192.168.0.120:8000/seguimiento/list2`, {
                 params: { params: id }
             });
-
-            solicitudSeleccionada.value = response.data[0] || {}; // Toma el primer elemento o un objeto vacío si no hay datos
-            seguimientoSeleccionado.value = JSON.parse(solicitudSeleccionada.value.Seguimiento || '[]'); // Parsea el seguimiento o inicializa un arreglo vacío
+            solicitudSeleccionada.value = response.data[0] || {};
+            seguimientoSeleccionado.value = JSON.parse(solicitudSeleccionada.value.Seguimiento || '[]');
             mostrarDialogoSeguimiento.value = true;
         }
     } catch (error) {
