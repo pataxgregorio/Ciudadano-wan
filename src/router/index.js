@@ -22,7 +22,6 @@ export default route(function (/* { store, ssrContext } */) {
 
   Router.beforeEach((to, from, next) => {
     const isAuthenticated = !!localStorage.getItem("token"); // Verificar autenticación
-    console.log(isAuthenticated);
     if (
       to.matched.some((record) => record.meta.requiresAuth) &&
       !isAuthenticated

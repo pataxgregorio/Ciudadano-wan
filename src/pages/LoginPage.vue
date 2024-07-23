@@ -38,7 +38,6 @@ async function login() {
     });
 
     // Almacena el token en localStorage o un almacén de estado (Pinia, Vuex, etc.)
-    console.log(response.data.token);
     localStorage.setItem("token", response.data.token);
 
     router.push("/dashboard"); // Redirige a una ruta protegida
@@ -56,11 +55,9 @@ async function login() {
 .form {
   padding: 1.4rem 7.5rem 1.4rem 7.5rem;
 }
-template {
-  background-image: "/images/main.png";
-}
+
 .my-card {
-  background: rgba(255, 255, 255, 0.5) !important;
+  background: rgba(255, 255, 255, 1) !important;
 }
 
 .my-card .q-card-section {

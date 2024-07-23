@@ -1,5 +1,10 @@
 const routes = [
   {
+    path: "/consultar",
+    component: () => import("pages/ConsultarPublico.vue"),
+    meta: { requiresAuth: false },
+  },
+  {
     path: "/",
     component: () => import("layouts/NoLayout.vue"),
     children: [

@@ -8,56 +8,73 @@
         <q-btn push color="primary" label="Buscar" @click="fetchData" />
     </div>
 
-    <div class="q-pa-md column items-center">
-        <q-table v-if="solicitudes.length > 0" flat bordered :rows="solicitudes" :columns="mobileColumns" row-key="id"
-            :pagination="{ rowsPerPage: 0 }" class="responsive-table" style="text-align: center;">
-            <template v-slot:body-cell-acciones="props">
-                <q-td :props="props" class="text-center">
-                    <q-btn size="sm" color="primary" label="Ver" @click="verSolicitud(props.row.id)" />
-                </q-td>
-            </template>
-        </q-table>
-
-        <div v-else-if="search !== ''">
-            No se encontraron resultados para "{{ search }}".
-        </div>
-
-        <div v-else>
-            Ingresa un número de cédula o solicitud para buscar.
-        </div>
-
+    <div v-for="solicitud in solicitudes" :key="solicitud.id">
+        <q-card class="my-card">
+            <q-card-section class="form section">
+                <div class="seccion-1-ver">
+                    <p><span class="negrita">Nro Solicitud: </span>{{ solicitud.id }}</p>
+                    <li><span class="negrita">Solicitante:</span> {{ solicitud.solicitante }}</li>
+                    <li><span class="negrita">Estatus:</span> {{ solicitud.nombrestatus }}</li>
+                    <li><span class="negrita">Fecha:</span> {{ formatDate(solicitud.fecha) }}</li>
+                    <p><span class="negrita">Tipo Solicitud:</span> {{ solicitud.nombretipo }}</p>
+                    <div class="seccion-1-ver">
+                        <div v-for="beneficiario in solicitud.beneficiarios" :key="beneficiario.cedula">
+                            <li><span class="negrita">Beneficiario:</span> {{ beneficiario.nombre }}</li>
+                            <li><span class="negrita">Cédula:</span> {{ beneficiario.cedula }}</li>
+                            <li><span class="negrita">Solicita:</span> {{ beneficiario.solicita }}</li>
+                        </div>
+                    </div>
+                </div>
+                <div class="seccion-3-ver">
+                    <li><span class="negrita">Comuna:</span> {{ solicitud.comuna }}</li>
+                    <LI><span class="negrita">Comunidad:</span> {{ solicitud.comunidad }}</LI>
+                    <q-btn push color="primary" label="Ver" @click="verSolicitud(solicitud.id)" />
+                </div>
+            </q-card-section>
+        </q-card>
     </div>
 
-    <div class="q-pa-md column items-center">
-        <q-table v-if="mostrarDenunciaReclamo" flat bordered :rows="solicitudes" :columns="mobileColumns" row-key="id"
-            :pagination="{ rowsPerPage: 0 }" class="responsive-table" style="text-align: center;">
-            <template v-slot:body-cell-acciones="props">
-                <q-td :props="props" class="text-center">
-                    <q-btn size="sm" color="primary" label="Ver" @click="verSolicitud(props.row.id)" />
-                </q-td>
-            </template>
-        </q-table>
+    <div v-if="search !== '' && solicitudes.length === 0">
+        <p style="text-align: center;">No se encontraron resultados para "{{ search }}".</p>
     </div>
 
+    <div v-else-if="search === ''">
+        <p style="text-align: center;">Ingrese un número de cédula o solicitud para buscar.</p>
+    </div>
     <q-dialog v-model="mostrarDialogoSeguimiento">
         <q-card style="width: 80vw; max-width: 800px">
             <q-card-section>
-                <div class="text-h6">Seguimiento de la Solicitud {{ solicitudSeleccionada.NumeroSolicitud }}</div>
+                <div class="text-h6">
+                    Seguimiento de la Solicitud {{ solicitudSeleccionada.NumeroSolicitud }}
+                </div>
             </q-card-section>
 
             <q-separator />
 
-            <q-card-section v-if="seguimientoSeleccionado.length > 0">
-                <q-table flat bordered :rows="seguimientoSeleccionado" :columns="columnsSeguimiento">
-                    <template v-slot:body-cell-imagen="props">
-                        <q-td :props="props">
-                            <a :href="'http://192.168.0.120:8000/' + props.row.imagen" target="_blank">
-                                <q-img :src="'http://192.168.0.120:8000/' + props.row.imagen"
+            <q-card-section v-if="seguimientoSeleccionado.length > 0" class="seguimiento-section">
+                <div v-for="item in seguimientoSeleccionado" :key="item.id" class="seguimiento-card">
+                    <div class="section">
+                        <div class="seccion-1">
+                            <p class="section-title"><span class="negrita">#</span>{{ item.item }}</p>
+                        </div>
+                    </div>
+                    <div class="section">
+                        <div class="seccion-1">
+                            <p class="section-title"><span class="negrita">Fecha y Hora: </span>{{
+                                formatDate(item.fecha) }}
+                            </p>
+                            <!-- <p>Estatus: {{ item.estatus }}</p> -->
+                            <p class="section-title"><span class="negrita">Descripcion: </span> {{ item.asunto }}</p>
+                        </div>
+                        <div class="seccion-1">
+                            <p class="section-title"><span class="negrita">Imagen: </span></p>
+                            <a :href="'http://192.168.0.120:7000/' + item.imagen" target="_blank">
+                                <q-img :src="'http://192.168.0.120:7000/' + item.imagen"
                                     style="height: 100px; max-width: 150px" />
                             </a>
-                        </q-td>
-                    </template>
-                </q-table>
+                        </div>
+                    </div>
+                </div>
             </q-card-section>
 
             <q-card-section v-else>
@@ -67,57 +84,26 @@
             <q-separator />
 
             <q-card-actions align="right">
-                <q-btn flat label="Cerrar" color="primary" v-close-popup />
+                <q-btn push color="primary" label="Cerrar" v-close-popup />
             </q-card-actions>
         </q-card>
     </q-dialog>
 </template>
-
 <script setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import axios from 'axios';
 import { useQuasar } from 'quasar';
 
 const $q = useQuasar();
 const search = ref('');
 const solicitudes = ref([]);
+const denunciados = ref([]);
 const mostrarDialogoSeguimiento = ref(false);
 const mostrarDenunciaReclamo = ref(false);
 const seguimientoSeleccionado = ref([]);
 const solicitudSeleccionada = ref({});
 const tipoSolicitud = ref(null);
-
-// Definición de columns ANTES de mobileColumns
-const columns = [
-    { name: 'id', label: 'Numero de Solicitud', field: 'id', sortable: true },
-    { name: 'solicitante', label: 'Solicitante', field: 'solicitante', sortable: true },
-    { name: 'nombretipo', label: 'Tipo de Solicitud', field: 'nombretipo' },
-    { name: 'Analista', label: 'Analista', field: 'analista' },
-    { name: 'comuna', label: 'Comuna', field: 'comuna' },
-    { name: 'nombrestatus', label: 'Estatus', field: 'nombrestatus' },
-    { name: 'acciones', label: 'Acciones' } // Nueva columna para el botón "Ver"
-];
-
-const mobileColumns = $q.screen.lt.sm ? [
-    // Columnas para pantallas pequeñas
-    { name: 'id', label: 'Nro Solicitud', field: 'id', sortable: true },
-    { name: 'solicitante', label: 'Solicitante', field: 'solicitante', sortable: true },
-    { name: 'Analista', label: 'Analista', field: 'analista' },
-    { name: 'comuna', label: 'Comuna', field: 'comuna' },
-    { name: 'nombrestatus', label: 'Estatus', field: 'nombrestatus' },
-    { name: 'acciones', label: '' }, // Columna solo para el botón
-] : columns; // Usa las columnas originales para pantallas más grandes
-
-const columnsSeguimiento = [
-    { name: 'item', label: 'Item', field: 'item' },
-    { name: 'fecha', label: 'Fecha y Hora', field: row => formatDate(row.fecha) },
-    { name: 'asunto', label: 'Analisis', field: 'asunto' },
-    {
-        name: 'imagen',
-        label: 'Evidencia',
-        field: (row) => `http://192.168.0.120:8000/${row.imagen}`, // Campo para la URL completa
-    }, // Columna para la imagen
-];
+const idSolicitud = ref(null);
 
 const formatDate = (fechaISO) => {
     const fecha = new Date(fechaISO);
@@ -129,66 +115,147 @@ const formatDate = (fechaISO) => {
 
     return `${dia}-${mes}-${año} ${hora}:${minutos}`;
 };
-
 const fetchData = async () => {
     try {
-        const response = await axios.get('http://192.168.0.120:8000/solicitud/list2', {
+        const response = await axios.get('http://192.168.0.120:7000/solicitud/list2', {
             params: { params: search.value }
         });
 
-        solicitudes.value = response.data;
-        if (solicitudes.value.length > 0) { // Check if solicitudes is not empty
-            tipoSolicitud.value = solicitudes.value[0]; // Assign the first solicitud
-        } else {
-            tipoSolicitud.value = null; // Handle the case where no solicitudes are found
-        }
+        solicitudes.value = response.data.map(solicitud => ({
+            ...solicitud,
+            beneficiarios: JSON.parse(solicitud.beneficiario)
+        }));
     } catch (error) {
         console.error("Error fetching data:", error);
-        // Manejo de errores (mostrar notificación al usuario, etc.)
     }
 };
 
+
 const verSolicitud = async (id) => {
     try {
-        await fetchData(); // Ensure fetchData is called before accessing tipoSolicitud.value
-        if (tipoSolicitud.value.nombretipo === 'DENUNCIA' || tipoSolicitud.value.nombretipo === 'RECLAMO' || tipoSolicitud.value.nombretipo === 'QUEJA') { // Check if tipoSolicitud.value is not null
+        idSolicitud.value = id;
+        await fetchData();
+        const arraySolicitud = tipoSolicitud.value = solicitudes.value.find(solicitud => solicitud.id === id);
+        tipoSolicitud.value.nombretipo = arraySolicitud.nombretipo;
+        if (
+            tipoSolicitud.value.nombretipo === 'DENUNCIA' ||
+            tipoSolicitud.value.nombretipo === 'RECLAMO' ||
+            tipoSolicitud.value.nombretipo === 'QUEJAS'
+        ) {
             mostrarDenunciaReclamo.value = true;
-            console.log(solicitudes.value);
+            const response = await axios.get(
+                `http://192.168.0.120:7000/solicitud/list3`,
+                {
+                    params: { params: id },
+                }
+            );
+            const denunciadosData = JSON.parse(response.data[0].denunciado);
+
+            denunciados.value = denunciadosData.map(denunciado => ({
+                ...denunciado,
+                idsolicitud: id
+            }));
         } else {
-            const response = await axios.get(`http://192.168.0.120:8000/seguimiento/list2`, {
+            const response = await axios.get(`http://192.168.0.120:7000/seguimiento/list2`, {
                 params: { params: id }
             });
+            mostrarDenunciaReclamo.value = false;
             solicitudSeleccionada.value = response.data[0] || {};
             seguimientoSeleccionado.value = JSON.parse(solicitudSeleccionada.value.Seguimiento || '[]');
             mostrarDialogoSeguimiento.value = true;
         }
     } catch (error) {
         console.error("Error fetching data:", error);
-        // Manejo de errores (mostrar notificación al usuario, etc.)
     }
 };
+
+watch(fetchData, (newValue) => {
+    if (newValue) {
+        mostrarDenunciaReclamo.value = false;
+    }
+});
 
 </script>
 
 <style>
-.responsive-table {
-    /* Ajustes generales */
-    width: 100%;
-    background-color: rgba(255, 255, 255, 0.3);
-    /* Fondo blanco con 80% de opacidad */
+.section {
+    display: flex;
+    justify-content: space-between;
+}
 
-    /* Estilos para móviles */
-    @media (max-width: 370px) {
-        font-size: 14px;
+.negrita {
+    font-weight: bold;
+}
 
-        th,
-        td {
-            padding: 8px;
-        }
+.my-card {
+    max-width: 97%;
+    margin: 0 auto 0 auto;
+    margin-top: 20px;
+}
 
-        .q-table__card {
-            box-shadow: none;
-        }
+.seccion-1-ver {
+    display: flex;
+    flex-direction: column;
+}
+
+.seccion-1-ver li {
+    list-style: none;
+}
+
+.seccion-3-ver li {
+    list-style: none;
+}
+
+.seccion-2-ver {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.seccion-3-ver p {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+    max-width: 120px;
+}
+
+
+
+.background-image {
+    background-image: url("/images/siamobile.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+@media (max-width: 768px) {
+    .seccion-1-ver {
+        max-width: 200px;
     }
+
+    .seccion-3-ver {
+        max-width: 120px;
+    }
+}
+
+@media (min-width: 768px) {
+
+    .background-image {
+        background-image: url("/images/siadesktop.jpg");
+        background-size: fill;
+        background-position: top;
+    }
+}
+
+.seguimiento-section {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.seguimiento-card {
+    border: 1px solid #ccc;
+    padding: 16px;
+    border-radius: 4px;
 }
 </style>

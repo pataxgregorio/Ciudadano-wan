@@ -1,7 +1,7 @@
 <template>
     <q-card :class="$q.dark.isActive ? 'bg-dark' : ''">
         <q-card-section class="text-h6" style="text-align: center;">
-            Análisis por Estatus
+            Indicadores de la Evolución de los Casos Atendidos
             <q-btn icon="fa fa-download" class="float-right" @click="saveImage" flat dense>
                 <q-tooltip>Descargar Grafica PNG</q-tooltip>
             </q-btn>

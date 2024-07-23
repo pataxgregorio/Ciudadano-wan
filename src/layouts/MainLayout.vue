@@ -51,21 +51,18 @@ function toggleLeftDrawer() {
 }
 
 .background-image {
-  background-image: url("/images/main.png");
+  background-image: url("/images/mobile.jpg");
   background-size: cover;
-  /* Cubre todo el espacio disponible */
   background-position: center;
   background-repeat: no-repeat;
 }
 
-@media (max-width: 600px) {
+@media (min-width: 768px) {
 
-  /* Ajusta el valor según tus necesidades */
   .background-image {
+    background-image: url("/images/siadesktop.jpg");
     background-size: fill;
-    /* Contiene la imagen sin deformarla */
     background-position: top;
-    /* Opcional, para alinear la imagen arriba */
   }
 }
 </style>

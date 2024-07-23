@@ -10,17 +10,20 @@
   display: flex;
   align-items: center;
 }
+
 .background-image {
-  background-image: url("/images/main.png");
-  background-size: cover; /* Cubre todo el espacio disponible */
+  background-image: url("/images/siamobile.jpg");
+  background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
 }
-@media (max-width: 600px) {
-  /* Ajusta el valor según tus necesidades */
+
+@media (min-width: 768px) {
+
   .background-image {
-    background-size: fill; /* Contiene la imagen sin deformarla */
-    background-position: top; /* Opcional, para alinear la imagen arriba */
+    background-image: url("/images/siadesktop.jpg");
+    background-size: fill;
+    background-position: top;
   }
 }
 </style>

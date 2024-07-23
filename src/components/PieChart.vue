@@ -1,10 +1,10 @@
 <template>
   <q-card :class="$q.dark.isActive ? 'bg-dark text-white' : ''">
     <q-card-section class="text-h6">
-      Solicitudes en Proceso
-      <q-btn icon="fa-solid fa-download" class="float-right" flat dense @click="saveImage">
+      Análisis Diacrónico de Tipología de Procedimientos de Atención al Ciudadano
+      <!-- <q-btn icon="fa-solid fa-download" class="float-right" flat dense @click="saveImage">
         <q-tooltip>Descargar Grafica PNG</q-tooltip>
-      </q-btn>
+      </q-btn> -->
     </q-card-section>
 
     <q-card-section class="q-pa-none">

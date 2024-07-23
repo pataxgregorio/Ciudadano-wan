@@ -1,10 +1,10 @@
 <template>
   <q-card :class="$q.dark.isActive ? 'bg-dark' : ''">
     <q-card-section class="text-h6">
-      Estadisticas de Solicitudes
-      <q-btn icon="fa fa-download" class="float-right" @click="saveImage" flat dense>
+      Medidores por tipo de Gestiones y Solicitudes de Atención al Ciudadano
+      <!-- <q-btn icon="fa fa-download" class="float-right" @click="saveImage" flat dense>
         <q-tooltip>Descargar Grafica PNG</q-tooltip>
-      </q-btn>
+      </q-btn> -->
     </q-card-section>
     <q-card-section>
       <ECharts ref="barchart" :option="options" autoresize style="height: 350px; width: 100%;" />

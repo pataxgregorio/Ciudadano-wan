@@ -27,7 +27,7 @@ module.exports = configure(function (/* ctx */) {
     extras: [
       // 'ionicons-v4',
       // 'mdi-v7',
-      'fontawesome-v6',
+      "fontawesome-v6",
       // 'eva-icons',
       // 'themify',
       // 'line-awesome',
@@ -81,7 +81,7 @@ module.exports = configure(function (/* ctx */) {
       // https: true
       open: true, // opens browser window automatically
       headers: {
-        "Access-Control-Allow-Origin": "http://localhost:8000",
+        "Access-Control-Allow-Origin": "http://192.168.0.120:7000",
         "Access-Control-Allow-Credentials": true,
       },
     },
