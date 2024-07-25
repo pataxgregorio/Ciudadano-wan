@@ -29,6 +29,11 @@ const routes = [
         component: () => import("pages/ConsultarSolicitud.vue"),
         meta: { requiresAuth: true },
       },
+      {
+        path: "/listado",
+        component: () => import("pages/ListadoSolicitud.vue"),
+        meta: { requiresAuth: true },
+      },
     ],
   },
   {

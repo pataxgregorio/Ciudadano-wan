@@ -6,6 +6,7 @@
 
         <q-btn v-if="showVerEstadisticasButton" label="Ver Estadisticas" color="primary" to="/dashboard" />
         <q-btn v-if="showVerConsultaButton" label="Consultar Solicitud" color="primary" to="/consulta" />
+        <q-btn v-if="showVerListadoButton" label="Listar Solicitudes" color="primary" to="/listado" />
         <q-btn label="Cerrar Sesión" color="primary" @click="logout" />
       </q-toolbar>
     </q-header>
@@ -25,6 +26,7 @@ const route = useRoute();
 
 const showVerEstadisticasButton = computed(() => route.path !== "/dashboard");
 const showVerConsultaButton = computed(() => route.path !== "/consulta");
+const showVerListadoButton = computed(() => route.path !== "/listado");
 
 
 function logout() {

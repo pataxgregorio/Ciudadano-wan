@@ -5,7 +5,7 @@
                 <q-icon name="search" />
             </template>
         </q-input>
-        <q-btn push color="primary" label="Buscar" @click="fetchData" />
+        <!-- <q-btn push color="primary" label="Buscar" @click="fetchData" /> -->
     </div>
 
     <div v-for="solicitud in solicitudes" :key="solicitud.id">
@@ -68,9 +68,8 @@
                         </div>
                         <div class="seccion-1">
                             <p class="section-title"><span class="negrita">Imagen: </span></p>
-                            <a :href="'http://192.168.0.120:7000/' + item.imagen" target="_blank">
-                                <q-img :src="'http://192.168.0.120:7000/' + item.imagen"
-                                    style="height: 100px; max-width: 150px" />
+                            <a :href="'' + item.imagen" target="_blank">
+                                <q-img :src="'' + item.imagen" style="height: 100px; max-width: 150px" />
                             </a>
                         </div>
                     </div>
@@ -117,7 +116,7 @@ const formatDate = (fechaISO) => {
 };
 const fetchData = async () => {
     try {
-        const response = await axios.get('http://192.168.0.120:7000/solicitud/list2', {
+        const response = await axios.get('http://localhost:7000/solicitud/list2', {
             params: { params: search.value }
         });
 
@@ -144,7 +143,7 @@ const verSolicitud = async (id) => {
         ) {
             mostrarDenunciaReclamo.value = true;
             const response = await axios.get(
-                `http://192.168.0.120:7000/solicitud/list3`,
+                `http://localhost:7000/solicitud/list3`,
                 {
                     params: { params: id },
                 }
@@ -156,7 +155,7 @@ const verSolicitud = async (id) => {
                 idsolicitud: id
             }));
         } else {
-            const response = await axios.get(`http://192.168.0.120:7000/seguimiento/list2`, {
+            const response = await axios.get(`http://localhost:7000/seguimiento/list2`, {
                 params: { params: id }
             });
             mostrarDenunciaReclamo.value = false;
