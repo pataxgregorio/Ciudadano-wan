@@ -168,8 +168,8 @@
                         </div>
                         <div class="seccion-1">
                             <p class="section-title"><span class="negrita">Imagen: </span></p>
-                            <a :href="'' + item.imagen" target="_blank">
-                                <q-img :src="'' + item.imagen" style="height: 100px; max-width: 150px" />
+                            <a :href="baseUrl + '/' + item.imagen" target="_blank">
+                                <q-img :src="baseUrl + '/' + item.imagen" style="height: 100px; max-width: 150px" />
                             </a>
                         </div>
                     </div>
@@ -193,7 +193,7 @@ import { ref, watch } from 'vue';
 import axios from 'axios';
 import { useQuasar } from 'quasar';
 
-const $q = useQuasar();
+const baseUrl = 'http://156.235.91.67:8081';
 const search = ref('');
 const solicitudes = ref([]);
 const denunciados = ref([]);
@@ -216,7 +216,7 @@ const formatDate = (fechaISO) => {
 };
 const fetchData = async () => {
     try {
-        const response = await axios.get('http://192.168.0.120:7000/solicitud/list2', {
+        const response = await axios.get('http://156.235.91.67:8081/solicitud/list2', {
             params: { params: search.value }
         });
 
@@ -243,7 +243,7 @@ const verSolicitud = async (id) => {
         ) {
             mostrarDenunciaReclamo.value = true;
             const response = await axios.get(
-                `http://192.168.0.120:7000/solicitud/list3`,
+                `http://156.235.91.67:8081/solicitud/list3`,
                 {
                     params: { params: id },
                 }
@@ -255,7 +255,7 @@ const verSolicitud = async (id) => {
                 idsolicitud: id
             }));
         } else {
-            const response = await axios.get(`http://192.168.0.120:7000/seguimiento/list2`, {
+            const response = await axios.get(`http://156.235.91.67:8081/seguimiento/list2`, {
                 params: { params: id }
             });
             mostrarDenunciaReclamo.value = false;

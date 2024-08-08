@@ -53,8 +53,9 @@
                     <q-table flat bordered :rows="seguimientoSeleccionado" :columns="columnsSeguimiento">
                         <template v-slot:body-cell-imagen="props">
                             <q-td :props="props">
-                                <a :href="'' + props.row.imagen" target="_blank">
-                                    <q-img :src="'' + props.row.imagen" style="height: 100px; max-width: 150px" />
+                                <a :href="'156.235.91.67:8081' + props.row.imagen" target="_blank">
+                                    <q-img :src="'156.235.91.67:8081' + props.row.imagen"
+                                        style="height: 100px; max-width: 150px" />
                                 </a>
                             </q-td>
                         </template>
@@ -144,7 +145,7 @@ const formatDate = (fechaISO) => {
 
 const fetchData = async () => {
     try {
-        const response = await axios.get('http://192.168.0.120:7000/solicitud/list2', {
+        const response = await axios.get('http://156.235.91.67:8081/solicitud/list2', {
             params: { params: search.value }
         });
         // Ensure fetchData is called before accessing tipoSolicitud.value
@@ -174,7 +175,7 @@ const verSolicitud = async (id) => {
         ) {
             mostrarDenunciaReclamo.value = true;
             const response = await axios.get(
-                `http://192.168.0.120:7000/solicitud/list3`,
+                `http://156.235.91.67:8081/solicitud/list3`,
                 {
                     params: { params: id },
                 }

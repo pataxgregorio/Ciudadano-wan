@@ -81,7 +81,7 @@ module.exports = configure(function (/* ctx */) {
       // https: true
       open: true, // opens browser window automatically
       headers: {
-        "Access-Control-Allow-Origin": "http://192.168.0.120:7000",
+        "Access-Control-Allow-Origin": "http://156.235.91.67:8081",
         "Access-Control-Allow-Credentials": true,
       },
     },

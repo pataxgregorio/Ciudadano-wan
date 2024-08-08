@@ -40,7 +40,7 @@ import { ref, onMounted } from 'vue';
 import axios from 'axios';
 
 const getComunas = async () => {
-    const response = await axios.get('http://192.168.0.120:7000/getComunas');
+    const response = await axios.get('http://156.235.91.67:8081/getComunas');
     return response.data;
 };
 
@@ -73,7 +73,7 @@ export default {
                     comuna_id: selectedComunaId.value,
                 };
 
-                const response = await axios.get('http://localhost:7000/solicitud/imprimirWAN', {
+                const response = await axios.get('http://156.235.91.67:8081/solicitud/imprimirWAN', {
                     params: queryParams
                 });
 
@@ -93,7 +93,7 @@ export default {
                     comuna_id: selectedComunaId.value,
                 };
 
-                const response = await axios.get('http://localhost:7000/solicitud/getSolicitudesWAN', {
+                const response = await axios.get('http://156.235.91.67:8081/solicitud/getSolicitudesWAN', {
                     params: queryParams
                 });
 
