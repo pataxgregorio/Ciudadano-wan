@@ -144,7 +144,7 @@ const formatDate = (fechaISO) => {
 
 const fetchData = async () => {
     try {
-        const response = await axios.get('http://localhost:7000/solicitud/list2', {
+        const response = await axios.get('http://192.168.0.120:7000/solicitud/list2', {
             params: { params: search.value }
         });
         // Ensure fetchData is called before accessing tipoSolicitud.value
@@ -174,7 +174,7 @@ const verSolicitud = async (id) => {
         ) {
             mostrarDenunciaReclamo.value = true;
             const response = await axios.get(
-                `http://localhost:7000/solicitud/list3`,
+                `http://192.168.0.120:7000/solicitud/list3`,
                 {
                     params: { params: id },
                 }

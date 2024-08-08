@@ -14,9 +14,106 @@
                 <div class="seccion-1-ver">
                     <p><span class="negrita">Nro Solicitud: </span>{{ solicitud.id }}</p>
                     <li><span class="negrita">Solicitante:</span> {{ solicitud.solicitante }}</li>
-                    <li><span class="negrita">Estatus:</span> {{ solicitud.nombrestatus }}</li>
+                    <li><span class="negrita">Estatus:</span>
+                        <span v-if="solicitud.nombrestatus === 'FINALIZADA'" class="text-green">{{
+                            solicitud.nombrestatus
+                        }} <q-icon name="fa-solid fa-check" /> </span>
+
+                        <span v-else-if="solicitud.nombrestatus === 'EN ANALISIS'" class="text-yellow">{{
+                            solicitud.nombrestatus
+                            }} <q-icon name="fa-solid fa-magnifying-glass" /></span>
+
+                        <span v-else-if="solicitud.nombrestatus === 'REGISTRADA'" class="text-yellow">{{
+                            solicitud.nombrestatus
+                            }}<q-icon name="fa-solid fa-paperclip" /></span>
+
+                        <span v-else-if="solicitud.nombrestatus === 'RECHAZADA'" class="text-red">{{
+                            solicitud.nombrestatus
+                            }}<q-icon name="fa-solid fa-xmark" /></span>
+
+                        <span v-else-if="solicitud.nombrestatus === 'ANULADA'" class="text-blue">{{
+                            solicitud.nombrestatus
+                            }}<q-icon name="fa-solid fa-xmark" /></span>
+
+                        <span v-else>{{ solicitud.nombrestatus }}</span>
+                    </li>
+
                     <li><span class="negrita">Fecha:</span> {{ formatDate(solicitud.fecha) }}</li>
-                    <p><span class="negrita">Tipo Solicitud:</span> {{ solicitud.nombretipo }}</p>
+                    <p>
+                        <span v-if="solicitud.nombretipo === 'MEDICINA'"><span class="negrita">Tipo Solicitud:</span>{{
+                            solicitud.nombretipo }} <q-icon name="fa-solid fa-pills" /></span>
+
+                        <span v-else-if="solicitud.nombretipo === 'LABORATORIO'"><span class="negrita">Tipo
+                                Solicitud:</span>{{
+                                    solicitud.nombretipo }} <q-icon name="fa-solid fa-flask" /></span>
+                        <span v-else-if="solicitud.nombretipo === 'ESTUDIO'"><span class="negrita">Tipo
+                                Solicitud:</span>{{
+                                    solicitud.nombretipo }} <q-icon name="fa-solid fa-clipboard" /></span>
+
+                        <span v-else-if="solicitud.nombretipo === 'INSUMOS'"><span class="negrita">Tipo
+                                Solicitud:</span>{{
+                                    solicitud.nombretipo }} <q-icon name="fa-solid fa-stethoscope" /></span>
+
+                        <span v-else-if="solicitud.nombretipo === 'CONSULTAS'"><span class="negrita">Tipo
+                                Solicitud:</span>{{
+                                    solicitud.nombretipo }} <q-icon name="fa-solid fa-hand-holding-heart" /></span>
+
+                        <span v-else-if="solicitud.nombretipo === 'DONACIONES Y AYUDA ECONOMICA'"><span
+                                class="negrita">Tipo
+                                Solicitud:</span>{{
+                                    solicitud.nombretipo }} <q-icon name="fa-solid fa-money-bill" /></span>
+
+                        <span v-else-if="solicitud.nombretipo === 'AYUDAS TECNICAS'"><span class="negrita">Tipo
+                                Solicitud:</span>{{
+                                    solicitud.nombretipo }} <q-icon name="fa-solid fa-hand" /></span>
+
+                        <span v-else-if="solicitud.nombretipo === 'CIRUGIAS'"><span class="negrita">Tipo
+                                Solicitud:</span>{{
+                                    solicitud.nombretipo }} <q-icon name="fa-solid fa-pen-fancy" /></span>
+
+                        <span v-else-if="solicitud.nombretipo === 'OFTAMOLOGIA'"><span class="negrita">Tipo
+                                Solicitud:</span>{{
+                                    solicitud.nombretipo }} <q-icon name="fa-solid fa-glasses" /></span>
+
+                        <span v-else-if="solicitud.nombretipo === 'VISITA SOCIAL'"><span class="negrita">Tipo
+                                Solicitud:</span>{{
+                                    solicitud.nombretipo }} <q-icon name="fa-solid fa-hands-holding-child" /></span>
+
+                        <span v-else-if="solicitud.nombretipo === 'MATERIALES'"><span class="negrita">Tipo
+                                Solicitud:</span>{{
+                                    solicitud.nombretipo }} <q-icon name="fa-solid fa-boxes-stacked" /></span>
+
+                        <span v-else-if="solicitud.nombretipo === 'JORNADAS'"><span class="negrita">Tipo
+                                Solicitud:</span>{{
+                                    solicitud.nombretipo }} <q-icon name="fa-solid fa-person-shelter" /></span>
+
+                        <span v-else-if="solicitud.nombretipo === 'ALTO COSTO'"><span class="negrita">Tipo
+                                Solicitud:</span>{{
+                                    solicitud.nombretipo }} <q-icon name="fa-solid fa-money-check-dollar" /></span>
+
+                        <span v-else-if="solicitud.nombretipo === 'HURNAS'"><span class="negrita">Tipo
+                                Solicitud:</span>{{
+                                    solicitud.nombretipo }} <q-icon name="fa-solid fa-rainbow" /></span>
+
+                        <span v-else-if="solicitud.nombretipo === 'FOSAS'"><span class="negrita">Tipo
+                                Solicitud:</span>{{
+                                    solicitud.nombretipo }} <q-icon name="fa-solid fa-rainbow" /></span>
+
+                        <span v-else-if="solicitud.nombretipo === 'APOYO LOGISTICO'"><span class="negrita">Tipo
+                                Solicitud:</span>{{
+                                    solicitud.nombretipo }} <q-icon name="fa-solid fa-truck" /></span>
+
+                        <span v-else-if="solicitud.nombretipo === 'DOTACION'"><span class="negrita">Tipo
+                                Solicitud:</span>{{
+                                    solicitud.nombretipo }} <q-icon name="fa-solid fa-boxes-stacked" /></span>
+
+                        <span v-else-if="solicitud.nombretipo === 'OTROS'"><span class="negrita">Tipo
+                                Solicitud:</span>{{
+                                    solicitud.nombretipo }} <q-icon name="fa-solid fa-question" /></span>
+
+                        <span v-else class="negrita">Tipo Solicitud:{{ solicitud.nombretipo }}</span>
+
+                    </p>
                     <div class="seccion-1-ver">
                         <div v-for="beneficiario in solicitud.beneficiarios" :key="beneficiario.cedula">
                             <li><span class="negrita">Beneficiario:</span> {{ beneficiario.nombre }}</li>
@@ -54,8 +151,11 @@
             <q-card-section v-if="seguimientoSeleccionado.length > 0" class="seguimiento-section">
                 <div v-for="item in seguimientoSeleccionado" :key="item.id" class="seguimiento-card">
                     <div class="section">
-                        <div class="seccion-1">
-                            <p class="section-title"><span class="negrita">#</span>{{ item.item }}</p>
+                        <div class="seccion-1"
+                            style="background-color: black; color: white; width: 100%; text-align: center; height: 20px;">
+                            <p class="section-title"><span class="negrita">#</span>{{
+                                item.item
+                                }}</p>
                         </div>
                     </div>
                     <div class="section">
@@ -116,7 +216,7 @@ const formatDate = (fechaISO) => {
 };
 const fetchData = async () => {
     try {
-        const response = await axios.get('http://localhost:7000/solicitud/list2', {
+        const response = await axios.get('http://192.168.0.120:7000/solicitud/list2', {
             params: { params: search.value }
         });
 
@@ -143,7 +243,7 @@ const verSolicitud = async (id) => {
         ) {
             mostrarDenunciaReclamo.value = true;
             const response = await axios.get(
-                `http://localhost:7000/solicitud/list3`,
+                `http://192.168.0.120:7000/solicitud/list3`,
                 {
                     params: { params: id },
                 }
@@ -155,7 +255,7 @@ const verSolicitud = async (id) => {
                 idsolicitud: id
             }));
         } else {
-            const response = await axios.get(`http://localhost:7000/seguimiento/list2`, {
+            const response = await axios.get(`http://192.168.0.120:7000/seguimiento/list2`, {
                 params: { params: id }
             });
             mostrarDenunciaReclamo.value = false;
