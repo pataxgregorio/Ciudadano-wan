@@ -15,25 +15,25 @@
                     <p><span class="negrita">Nro Solicitud: </span>{{ solicitud.id }}</p>
                     <li><span class="negrita">Solicitante:</span> {{ solicitud.solicitante }}</li>
                     <li><span class="negrita">Estatus:</span>
-                        <span v-if="solicitud.nombrestatus === 'FINALIZADA'" class="text-green">{{
+                        <span v-if="solicitud.nombrestatus === 'FINALIZADA'" class="text-green negrita">{{
                             solicitud.nombrestatus
-                        }} <q-icon name="fa-solid fa-check" /> </span>
+                            }} <q-icon name="fa-solid fa-check" /> </span>
 
-                        <span v-else-if="solicitud.nombrestatus === 'EN ANALISIS'" class="text-yellow">{{
+                        <span v-else-if="solicitud.nombrestatus === 'EN ANALISIS'" class="text-blue negrita">{{
                             solicitud.nombrestatus
-                            }} <q-icon name="fa-solid fa-magnifying-glass" /></span>
+                        }} <q-icon name="fa-solid fa-magnifying-glass" /></span>
 
-                        <span v-else-if="solicitud.nombrestatus === 'REGISTRADA'" class="text-yellow">{{
+                        <span v-else-if="solicitud.nombrestatus === 'REGISTRADA'" class="text-yellow negrita">{{
                             solicitud.nombrestatus
-                            }}<q-icon name="fa-solid fa-paperclip" /></span>
+                        }}<q-icon name="fa-solid fa-paperclip" /></span>
 
-                        <span v-else-if="solicitud.nombrestatus === 'RECHAZADA'" class="text-red">{{
+                        <span v-else-if="solicitud.nombrestatus === 'RECHAZADA'" class="text-red negrita">{{
                             solicitud.nombrestatus
-                            }}<q-icon name="fa-solid fa-xmark" /></span>
+                        }}<q-icon name="fa-solid fa-xmark" /></span>
 
-                        <span v-else-if="solicitud.nombrestatus === 'ANULADA'" class="text-blue">{{
+                        <span v-else-if="solicitud.nombrestatus === 'ANULADA'" class="text-blue negrita">{{
                             solicitud.nombrestatus
-                            }}<q-icon name="fa-solid fa-xmark" /></span>
+                        }}<q-icon name="fa-solid fa-xmark" /></span>
 
                         <span v-else>{{ solicitud.nombrestatus }}</span>
                     </li>
@@ -118,7 +118,26 @@
                         <div v-for="beneficiario in solicitud.beneficiarios" :key="beneficiario.cedula">
                             <li><span class="negrita">Beneficiario:</span> {{ beneficiario.nombre }}</li>
                             <li><span class="negrita">Cédula:</span> {{ beneficiario.cedula }}</li>
-                            <li><span class="negrita">Solicita:</span> {{ beneficiario.solicita }}</li>
+                            <li v-if="solicitud.nombrestatus === 'FINALIZADA'">
+                                <span class="negrita">Solicita: </span> <span class="text-green negrita">{{
+                                    beneficiario.solicita }}</span>
+                            </li>
+                            <li v-if="solicitud.nombrestatus === 'EN ANALISIS'">
+                                <span class="negrita">Solicita: </span><span class="text-blue negrita">{{
+                                    beneficiario.solicita }}</span>
+                            </li>
+                            <li v-if="solicitud.nombrestatus === 'REGISTRADA'">
+                                <span class="negrita">Solicita: </span> <span class="text-yellow negrita">{{
+                                    beneficiario.solicita }}</span>
+                            </li>
+                            <li v-if="solicitud.nombrestatus === 'RECHAZADA'">
+                                <span class="negrita">Solicita: </span><span class="text-red negrita">{{
+                                    beneficiario.solicita }}</span>
+                            </li>
+                            <li v-if="solicitud.nombrestatus === 'ANULADA'">
+                                <span class="negrita">Solicita: </span> <span class="text-blue negrita">{{
+                                    beneficiario.solicita }}</span>
+                            </li>
                         </div>
                     </div>
                 </div>
@@ -155,7 +174,7 @@
                             style="background-color: black; color: white; width: 100%; text-align: center; height: 20px;">
                             <p class="section-title"><span class="negrita">#</span>{{
                                 item.item
-                                }}</p>
+                            }}</p>
                         </div>
                     </div>
                     <div class="section">
@@ -193,7 +212,7 @@ import { ref, watch } from 'vue';
 import axios from 'axios';
 import { useQuasar } from 'quasar';
 
-const baseUrl = 'http://156.235.91.67:8081';
+const baseUrl = 'http://156.235.91.67:4000';
 const search = ref('');
 const solicitudes = ref([]);
 const denunciados = ref([]);
@@ -214,13 +233,36 @@ const formatDate = (fechaISO) => {
 
     return `${dia}-${mes}-${año} ${hora}:${minutos}`;
 };
-const fetchData = async () => {
+
+const fetchData = async (newValue) => {
     try {
-        const response = await axios.get('http://156.235.91.67:8081/solicitud/list2', {
+        const response = await axios.get('http://156.235.91.67:4000/solicitud/list2', {
             params: { params: search.value }
         });
-
-        solicitudes.value = response.data.map(solicitud => ({
+        if (newValue) {
+            mostrarDenunciaReclamo.value = false;
+        }
+        if (response.data.length === 0) {
+            let busqueda;
+            if (search.value.length === 7) {
+                busqueda = search.value.slice(0, 1) + "." + search.value.slice(1, 4) + "." + search.value.slice(4)
+            } else if (search.value.length === 8) {
+                busqueda = search.value.slice(0, 2) + "." + search.value.slice(2, 5) + "." + search.value.slice(5);
+            } else {
+                busqueda = search.value;
+            }
+            console.log(busqueda);
+            if (busqueda) {
+                const response = await axios.get('http://156.235.91.67:4000/solicitud/list2', {
+                    params: { params: busqueda }
+                });
+                return solicitudes.value = response.data.map(solicitud => ({
+                    ...solicitud,
+                    beneficiarios: JSON.parse(solicitud.beneficiario)
+                }));
+            }
+        }
+        return solicitudes.value = response.data.map(solicitud => ({
             ...solicitud,
             beneficiarios: JSON.parse(solicitud.beneficiario)
         }));
@@ -228,7 +270,6 @@ const fetchData = async () => {
         console.error("Error fetching data:", error);
     }
 };
-
 
 const verSolicitud = async (id) => {
     try {
@@ -243,7 +284,7 @@ const verSolicitud = async (id) => {
         ) {
             mostrarDenunciaReclamo.value = true;
             const response = await axios.get(
-                `http://156.235.91.67:8081/solicitud/list3`,
+                `http://156.235.91.67:4000/solicitud/list3`,
                 {
                     params: { params: id },
                 }
@@ -255,12 +296,15 @@ const verSolicitud = async (id) => {
                 idsolicitud: id
             }));
         } else {
-            const response = await axios.get(`http://156.235.91.67:8081/seguimiento/list2`, {
+            const response = await axios.get(`http://156.235.91.67:4000/seguimiento/list2`, {
                 params: { params: id }
             });
             mostrarDenunciaReclamo.value = false;
             solicitudSeleccionada.value = response.data[0] || {};
-            seguimientoSeleccionado.value = JSON.parse(solicitudSeleccionada.value.Seguimiento || '[]');
+            seguimientoSeleccionado.value = JSON.parse(solicitudSeleccionada.value.Seguimiento || '[]').sort((a, b) => {
+                return b.fecha.localeCompare(a.fecha);
+            });
+
             mostrarDialogoSeguimiento.value = true;
         }
     } catch (error) {
@@ -316,15 +360,6 @@ watch(fetchData, (newValue) => {
     flex-direction: column;
     margin-top: 10px;
     max-width: 120px;
-}
-
-
-
-.background-image {
-    background-image: url("/images/siamobile.jpg");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
 }
 
 @media (max-width: 768px) {

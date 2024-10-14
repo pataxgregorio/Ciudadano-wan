@@ -1,7 +1,7 @@
 <template>
   <div>
     <q-page class="flex flex-center">
-      <q-card class="my-card">
+      <q-card class="my-card" style="margin-top: 230px">
         <q-card-section class="form">
           <div class="text-h6">INICIAR SESIÓN</div>
 
@@ -13,6 +13,7 @@
           <div v-if="error" class="text-negative">{{ error }}</div>
         </q-card-section>
       </q-card>
+    <img src="/images/sialogoletras.png" style="margin-bottom: 60px" width="330px">
     </q-page>
   </div>
 </template>
@@ -32,7 +33,7 @@ async function login() {
   error.value = null; // Limpiar mensaje de error anterior
 
   try {
-    const response = await axios.post("http://192.168.0.120:3000/login", {
+    const response = await axios.post("http://156.235.91.67:3000/login", {
       email: email.value, // Usa "email"
       password: password.value,
     });
