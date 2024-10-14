@@ -1,9 +1,38 @@
 const routes = [
   {
     path: "/consultar",
-    component: () => import("pages/ConsultarPublico.vue"),
-    meta: { requiresAuth: false },
-  },
+    component: () => import("layouts/NoLayout2.vue"),
+    children: [
+      {
+        path: "",
+        component: () => import("pages/TableResult.vue"),
+        meta: { requiresAuth: false },
+      },
+    
+       ] },
+       {
+        path: "/pie",
+        component: () => import("layouts/NoLayout2.vue"),
+        children: [
+          {
+            path: "",
+            component: () => import("pages/PieResult2.vue"),
+            meta: { requiresAuth: false },
+          },
+        
+           ] },
+        {
+        path: "/pie2",
+        component: () => import("layouts/NoLayout2.vue"),
+        children: [
+          {
+            path: "",
+            component: () => import("pages/PieResult3.vue"),
+            meta: { requiresAuth: false },
+          },
+        
+            ] },
+      
   {
     path: "/",
     component: () => import("layouts/NoLayout.vue"),

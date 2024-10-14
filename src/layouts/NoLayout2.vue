@@ -10,7 +10,7 @@
   display: flex;
   align-items: center;
 }
-
+/*
 .background-image {
   background-image: url("/images/SIAMOBILE2.jpg");
   clip-path: inset(1% 0% 0% 0%);
@@ -26,7 +26,7 @@
     background-size: fill;
     background-position: top;
   }
-}
+}*/
 </style>
 <script setup>
 import { ref } from "vue";

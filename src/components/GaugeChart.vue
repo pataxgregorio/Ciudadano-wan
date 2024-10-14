@@ -1,14 +1,22 @@
 <template>
     <q-card :class="$q.dark.isActive ? 'bg-dark' : ''">
         <q-card-section class="text-h6" style="text-align: center;">
-            Indicadores de la Evolución de los Casos Atendidos
-            <q-btn icon="fa fa-download" class="float-right" @click="saveImage" flat dense>
-                <q-tooltip>Descargar Grafica PNG</q-tooltip>
-            </q-btn>
+            Indicadores Gestión de Casos Atendidos en Valor Porcentual (%)
         </q-card-section>
         <q-card-section>
-            <div ref="gaugeContainer" :option="chartOption" autoresize style="height: 319px; width: 100%;"></div>
+            <div ref="gaugeContainer" :option="chartOption" autoresize style="height: 319px; width: 100%;">
+            </div>
         </q-card-section>
+        <div class="indicadores">
+            <p><span class="Cuadrado" style="color: #5B7AD8;"><q-icon name="fa-solid fa-square" /></span>Totales:
+                {{ totalSolicitudes }}</p>
+            <p><span class="Cuadrado" style="color: #9FE080;"><q-icon name="fa-solid fa-square" /></span>En Analisis:
+                {{ totalProcesadas }}</p>
+            <p><span class="Cuadrado" style="color: #FEDB5F;"><q-icon name="fa-solid fa-square" /></span>Rechazadas:
+                {{ totalRechazadas }}</p>
+            <p><span class="Cuadrado" style="color: #FD6F6F;"><q-icon name="fa-solid fa-square" /></span>Finalizadas:
+                {{ totalFinalizadas }}</p>
+        </div>
     </q-card>
 </template>
 
@@ -19,7 +27,6 @@ import { GaugeChart } from 'echarts/charts';
 import { useQuasar } from 'quasar';
 
 echarts.use([GaugeChart, CanvasRenderer]);
-
 export default {
     name: "GaugeChart",
     props: {
@@ -34,21 +41,32 @@ export default {
             $q: useQuasar(),
             options: {
                 series: []
-            }
-        };
+            },
+            totalSolicitudes: null
+        }
+    },
+    computed: {
+        chartOption() {
+            return this.options
+        },
     },
     watch: {
         chartData4: {
             handler(newChartData) {
                 if (newChartData && newChartData.length > 0) {
                     const data = newChartData[0];
+                    const maxVal = data.TOTAL_SOLICITUD;
+                    this.totalSolicitudes = data.TOTAL_SOLICITUD;
+                    this.totalProcesadas = data.TOTAL_PROCESADAS;
+                    this.totalRechazadas = data.TOTAL_RECHAZADAS;
+                    this.totalFinalizadas = data.TOTAL_FINALIZADAS;
 
                     this.options.series = [
                         {
                             type: 'gauge',
-                            radius: '97%', // Adjust radius as needed
+                            radius: '97%',
                             startAngle: 90,
-                            endAngle: -270,
+                            endAngle: -360,
                             pointer: {
                                 show: false
                             },
@@ -89,32 +107,29 @@ export default {
                                 formatter: '{value}',
                                 offsetCenter: ['0%', '-20%']
                             },
-                            data: [
-                                {
-                                    value: data.TOTAL_SOLICITUD,
-                                    name: 'Totales',
-                                    title: { offsetCenter: ['0%', '-70%'] },
-                                    detail: { offsetCenter: ['0%', '-60%'] }
-                                },
-                                {
-                                    value: data.TOTAL_REGISTRADAS,
-                                    name: 'Registradas',
-                                    title: { offsetCenter: ['-55%', '0%'] },
-                                    detail: { offsetCenter: ['-55%', '10%'] }
-                                },
-                                {
-                                    value: data.TOTAL_PROCESADAS,
-                                    name: 'Procesadas',
-                                    title: { offsetCenter: ['55%', '0%'] },
-                                    detail: { offsetCenter: ['55%', '10%'] }
-                                },
-                                {
-                                    value: data.TOTAL_FINALIZADAS,
-                                    name: 'Finalizadas',
-                                    title: { offsetCenter: ['0%', '40%'] },
-                                    detail: { offsetCenter: ['0%', '50%'] }
-                                }
-                            ]
+                            data: [{
+                                value: Math.round((data.TOTAL_SOLICITUD / data.TOTAL_SOLICITUD)* 100),
+                                name: 'Solicitudes Totales',
+                                title: { offsetCenter: ['0%', '-67%'] },
+                                detail: { valueAnimation: true, offsetCenter: ['0%', '-57%'] }
+                            }, {
+                                value: Math.round((data.TOTAL_PROCESADAS / data.TOTAL_SOLICITUD)* 100), // Normalizar al valor máximo
+                                name: 'En Análisis',
+                                title: { offsetCenter: ['-55%', '0%'] },
+                                detail: { valueAnimation: true, offsetCenter: ['-55%', '10%'] }
+                            },
+                            {
+                                value: Math.round((data.TOTAL_RECHAZADAS / data.TOTAL_SOLICITUD)* 100), // Normalizar al valor máximo
+                                name: 'Rechazadas',
+                                title: { offsetCenter: ['55%', '0%'] },
+                                detail: { valueAnimation: true, offsetCenter: ['55%', '10%'] }
+                            },
+                            {
+                                value: Math.round((data.TOTAL_FINALIZADAS / data.TOTAL_SOLICITUD)* 100), // Normalizar al valor máximo
+                                name: 'Finalizadas',
+                                title: { offsetCenter: ['0%', '40%'] },
+                                detail: { valueAnimation: true, offsetCenter: ['0%', '50%'] }
+                            }]
                         }
                     ];
                 } else {
@@ -129,6 +144,7 @@ export default {
             immediate: true
         }
     },
+
     mounted() {
         this.initChart();
     },
@@ -137,16 +153,20 @@ export default {
             this.chart = echarts.init(this.$refs.gaugeContainer);
             this.chart.setOption(this.options);
         },
-        saveImage() {
-            const linkSource = this.chart.getDataURL();
-            const downloadLink = document.createElement('a');
-            document.body.appendChild(downloadLink);
-            downloadLink.href = linkSource;
-            downloadLink.target = '_self';
-            downloadLink.download = 'GaugeChart.png';
-            downloadLink.click();
-            document.body.removeChild(downloadLink); // Clean up after download
-        }
     }
 };
 </script>
+
+<style>
+.indicadores {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    width: 100%;
+}
+
+.Cuadrado {
+    height: 50px;
+    width: 50px;
+}
+</style>

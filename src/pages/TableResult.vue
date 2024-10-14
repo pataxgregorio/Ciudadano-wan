@@ -1,30 +1,15 @@
 <template>
   <q-page class="">
-    <div class="filtrado">
-      <input type="date" v-model="fechaDesde">
-      <input type="date" v-model="fechaHasta">
-      <button @click="filtrar" class="btn">Filtrar</button>
-    </div>
-    <div class="row q-col-gutter-sm q-ml-xs q-mr-sm q-py-sm">
-      <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-        <GaugeChart :chartData4="chartData4" />
-      </div>
-      <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-        <BarChart :chartData="chartData" />
-      </div> <!--
-        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-          <PieChart :chartData2="chartData2" />
-        </div>-->
-      <!-- <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-          <SimpleencodeChart :chartData3="chartData3" />
-        </div> -->
+   
+    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+      <FinalizadasTable2 :rows="finalizadasRows" :titulo="'Ultimas Entradas al Almacen'"/>
     </div>
     <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-      <FinalizadasTable :rows="finalizadasRows" />
+      <FinalizadasTable3 :rows="finalizadasRows2" :titulo="'Casos por Comuna de Medicinas e Insumos'"/>
     </div>
   </q-page>
   <q-inner-loading :showing="isLoading">
-    <img class="loader" src="/public/images/loader.png" alt="Cargando..." width="200px">
+    <img class="loader" src="/images/loader.png" alt="Cargando..." width="200px">
   </q-inner-loading>
 </template>
 
@@ -32,21 +17,20 @@
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import url from 'axios';
-import BarChart from 'components/BarChart.vue';
-import PieChart from 'components/PieChart.vue';
-import SimpleencodeChart from 'components/SimpleencodeChart.vue';
-import GaugeChart from 'components/GaugeChart.vue';
-import FinalizadasTable from 'components/FinalizadasTable.vue';
+//import BarChart from 'components/BarChart.vue';
+//import PieChart from 'components/PieChart.vue';
+//import SimpleencodeChart from 'components/SimpleencodeChart.vue';
+//import GaugeChart from 'components/GaugeChart.vue';
+import FinalizadasTable3 from 'components/FinalizadasTable3.vue';
+import FinalizadasTable2 from 'components/FinalizadasTable2.vue';
 
 export default {
 
   name: "IndexPage",
   components: {
-    BarChart,
-    // PieChart,
-    // SimpleencodeChart,
-    GaugeChart,
-    FinalizadasTable
+   
+    FinalizadasTable3,
+    FinalizadasTable2
   },
   setup() {
     const isLoading = ref(true);
@@ -55,6 +39,8 @@ export default {
     const chartData3 = ref(null);
     const chartData4 = ref(null);
     const finalizadasRows = ref([]);
+    const finalizadasRows2 = ref([]);
+
     const fechaDesde = ref(null);
     const fechaHasta = ref(null);
 
@@ -99,16 +85,40 @@ export default {
       }
     }
     async function obtenerFinalizadas() {
-      try {
-        const response = await axios.get('http://156.235.91.67:4000/solicitud/totalFinalizadas3');
-        const data = response.data;
-        return finalizadasRows.value = Object.entries(data)
-          .map(([name, value]) => ({ name, value }));
-      } catch (error) {
-        console.error("Error obteniendo datos:", error);
+  try {
+    const response = await axios.get('http://127.0.0.1:8002/solicitud/totalFinalizadas5');
+    const data = response.data;
 
-      }
-    }
+    // Mapear los datos para que coincidan con el formato esperado
+    return finalizadasRows.value = data.map(item => ({
+      nombre: item.nombre,
+      cantidad_entrada: item.cantidad_entrada,
+      // Formatear la fecha
+      fecha: new Date(item.fecha).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' }),
+      tipoentrada: item.tipoentrada
+    }));
+
+  } catch (error) {
+    console.error("Error obteniendo datos:", error);
+  }
+}
+    async function obtenerFinalizadas2() {
+  try {
+    const response = await axios.get('http://127.0.0.1:8002/solicitud/totalFinalizadas4');
+    const data = response.data;
+    finalizadasRows2.value = processFinalizadasData(data); // Aquí se procesan los datos
+  } catch (error) {
+    console.error("Error obteniendo datos:", error);
+  }
+}
+function processFinalizadasData(data) {
+  return data.map(item => ({
+    comuna: item.comuna,
+    medicina: item.MEDICINA,
+    insumos: item.INSUMOS,
+    total: item.MEDICINA + item.INSUMOS
+  }));
+}
     async function fetchDataForChart1() {
       try {
         const response = await axios.get('http://156.235.91.67:4000/solicitud/solicitudTipo2');
@@ -147,9 +157,8 @@ export default {
         console.error("Error fetching data for chart 4:", error);
         return null; // Handle error gracefully
       }
-    }
-
-    function processChartData(data) {
+    };
+    function processChartData (data) {
       const nombres = [];
       const totales = [];
       data.forEach(solicitud => {
@@ -165,11 +174,13 @@ export default {
       // chartData3.value = await fetchDataForChart3();
       chartData4.value = await fetchDataForChart4();
       finalizadasRows.value = await obtenerFinalizadas();
+      finalizadasRows2.value = await obtenerFinalizadas2();
+
       setTimeout(() => {
         isLoading.value = false;
       }, 2000);
     });
-    return { isLoading, chartData, chartData4, finalizadasRows, filtrar, fechaDesde, fechaHasta };
+    return { isLoading, chartData, chartData4, finalizadasRows,finalizadasRows2, filtrar, fechaDesde, fechaHasta };
   }
 };
 </script>

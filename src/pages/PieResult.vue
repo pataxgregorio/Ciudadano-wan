@@ -1,30 +1,13 @@
 <template>
   <q-page class="">
-    <div class="filtrado">
-      <input type="date" v-model="fechaDesde">
-      <input type="date" v-model="fechaHasta">
-      <button @click="filtrar" class="btn">Filtrar</button>
-    </div>
-    <div class="row q-col-gutter-sm q-ml-xs q-mr-sm q-py-sm">
-      <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-        <GaugeChart :chartData4="chartData4" />
-      </div>
-      <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-        <BarChart :chartData="chartData" />
-      </div> <!--
-        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-          <PieChart :chartData2="chartData2" />
-        </div>-->
-      <!-- <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-          <SimpleencodeChart :chartData3="chartData3" />
-        </div> -->
-    </div>
-    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-      <FinalizadasTable :rows="finalizadasRows" />
-    </div>
+   
+         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+          <PieChart2 :chartData2="chartData2" />
+        </div>
+
   </q-page>
   <q-inner-loading :showing="isLoading">
-    <img class="loader" src="/public/images/loader.png" alt="Cargando..." width="200px">
+    <img class="loader" src="/images/loader.png" alt="Cargando..." width="200px">
   </q-inner-loading>
 </template>
 
@@ -32,21 +15,18 @@
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import url from 'axios';
-import BarChart from 'components/BarChart.vue';
-import PieChart from 'components/PieChart.vue';
-import SimpleencodeChart from 'components/SimpleencodeChart.vue';
-import GaugeChart from 'components/GaugeChart.vue';
-import FinalizadasTable from 'components/FinalizadasTable.vue';
+//import BarChart from 'components/BarChart.vue';
+import PieChart2 from 'components/PieChart2.vue';
+//import SimpleencodeChart from 'components/SimpleencodeChart.vue';
+//import GaugeChart from 'components/GaugeChart.vue';
+//import FinalizadasTable from 'components/FinalizadasTable.vue';
 
 export default {
 
   name: "IndexPage",
   components: {
-    BarChart,
-    // PieChart,
-    // SimpleencodeChart,
-    GaugeChart,
-    FinalizadasTable
+   
+    PieChart2
   },
   setup() {
     const isLoading = ref(true);
@@ -119,25 +99,25 @@ export default {
       }
     }
 
-    // async function fetchDataForChart2() {
-    //   try {
-    //     const response = await axios.get('http://156.235.91.67:4000/solicitud/solicitudTipo4');
-    //     return processChartData(response.data);
-    //   } catch (error) {
-    //     console.error("Error fetching data for chart 2:", error);
-    //     return null; // Handle error gracefully
-    //   }
-    // }
+    async function fetchDataForChart2() {
+      try {
+        const response = await axios.get('http://156.235.91.67:4000/solicitud/solicitudTipo4');
+        return processChartData(response.data);
+      } catch (error) {
+        console.error("Error fetching data for chart 2:", error);
+        return null; // Handle error gracefully
+      }
+    }
 
-    // async function fetchDataForChart3() {
-    //   try {
-    //     const response = await axios.get('http://156.235.91.67:4000/solicitud/solicitudTipo4');
-    //     return processChartData(response.data);
-    //   } catch (error) {
-    //     console.error("Error fetching data for chart 3:", error);
-    //     return null; // Handle error gracefully
-    //   }
-    // }
+    async function fetchDataForChart3() {
+      try {
+        const response = await axios.get('http://156.235.91.67:4000/solicitud/solicitudTipo4');
+        return processChartData(response.data);
+      } catch (error) {
+        console.error("Error fetching data for chart 3:", error);
+        return null; // Handle error gracefully
+      }
+    }
 
     async function fetchDataForChart4() {
       try {
@@ -161,15 +141,15 @@ export default {
 
     onMounted(async () => {
       chartData.value = await fetchDataForChart1();
-      // chartData2.value = await fetchDataForChart2();
-      // chartData3.value = await fetchDataForChart3();
+       chartData2.value = await fetchDataForChart2();
+       chartData3.value = await fetchDataForChart3();
       chartData4.value = await fetchDataForChart4();
       finalizadasRows.value = await obtenerFinalizadas();
       setTimeout(() => {
         isLoading.value = false;
       }, 2000);
     });
-    return { isLoading, chartData, chartData4, finalizadasRows, filtrar, fechaDesde, fechaHasta };
+    return { isLoading, chartData, chartData4, chartData2, chartData3, finalizadasRows, filtrar, fechaDesde, fechaHasta };
   }
 };
 </script>
