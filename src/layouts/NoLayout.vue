@@ -12,7 +12,8 @@
 }
 
 .background-image {
-  background-image: url("/images/siamobile.jpg");
+  background-image: url("/images/SIAMOBILE2.jpg");
+  clip-path: inset(1% 0% 0% 0%);
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -21,7 +22,7 @@
 @media (min-width: 768px) {
 
   .background-image {
-    background-image: url("/images/siadesktop.jpg");
+    background-image: url("/images/SIADESK2.jpg");
     background-size: fill;
     background-position: top;
   }

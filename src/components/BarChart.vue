@@ -7,54 +7,79 @@
       </q-btn> -->
     </q-card-section>
     <q-card-section>
-      <ECharts ref="barchart" :option="options" autoresize style="height: 350px; width: 100%;" />
+      <ECharts
+        ref="barchart"
+        :option="options"
+        autoresize
+        style="height: 380px; width: 100%"
+      />
     </q-card-section>
   </q-card>
 </template>
 
 <script>
-import * as echarts from 'echarts/core';
-import { CanvasRenderer } from 'echarts/renderers';
-import { BarChart } from 'echarts/charts';
-import { TitleComponent, TooltipComponent, GridComponent, LegendComponent } from 'echarts/components';
-import ECharts from 'vue-echarts';
-import { useQuasar } from 'quasar';
+import * as echarts from "echarts/core";
+import { CanvasRenderer } from "echarts/renderers";
+import { BarChart } from "echarts/charts";
+import {
+  TitleComponent,
+  TooltipComponent,
+  GridComponent,
+  LegendComponent,
+} from "echarts/components";
+import ECharts from "vue-echarts";
+import { useQuasar } from "quasar";
 
-
-echarts.use([TitleComponent, TooltipComponent, GridComponent, BarChart, CanvasRenderer, LegendComponent]);
+echarts.use([
+  TitleComponent,
+  TooltipComponent,
+  GridComponent,
+  BarChart,
+  CanvasRenderer,
+  LegendComponent,
+]);
 
 export default {
   name: "BarChart",
   components: { ECharts },
   props: {
-    chartData: { type: Object, required: true, default: () => ({ nombres: [], totales: [] }) }
+    chartData: {
+      type: Object,
+      required: true,
+      default: () => ({ nombres: [], totales: [] }),
+    },
   },
   data() {
     return {
       $q: useQuasar(),
       options: {
         tooltip: {
-          trigger: 'axis',
+          trigger: "axis",
           axisPointer: {
-            type: 'shadow'
+            type: "shadow",
           },
-          formatter: (params) => `${params[0].axisValue}: ${params[0].value}`
+          formatter: (params) => `${params[0].axisValue}: ${params[0].value}`,
         },
         xAxis: {
-          type: 'category',
-          data: []
+          type: "category",
+          data: [],
         },
         yAxis: {
-          type: 'value'
+          type: "value",
         },
-        series: [{
-          itemStyle: {
-            color: (params) => ['#FF5733', '#3498DB', '#2ECC71', '#F1C40F', '#9B59B6',][params.dataIndex % 5]
+        series: [
+          {
+            itemStyle: {
+              color: (params) =>
+                ["#FF5733", "#3498DB", "#2ECC71", "#F1C40F", "#9B59B6"][
+                  params.dataIndex % 5
+                ],
+            },
+            data: [],
+            type: "bar",
           },
-          data: [],
-          type: 'bar'
-        }]
-      }
+        ],
+      },
     };
   },
   watch: {
@@ -63,22 +88,21 @@ export default {
         this.options.xAxis.data = newChartData.nombres;
         this.options.series[0].data = newChartData.totales;
       },
-      deep: true
-    }
+      deep: true,
+    },
   },
   methods: {
     saveImage() {
       const linkSource = this.$refs.barchart.getDataURL();
-      const downloadLink = document.createElement('a');
+      const downloadLink = document.createElement("a");
       document.body.appendChild(downloadLink);
       downloadLink.href = linkSource;
-      downloadLink.target = '_self';
-      downloadLink.download = 'BarChart.png';
+      downloadLink.target = "_self";
+      downloadLink.download = "BarChart.png";
       downloadLink.click();
-    }
-  }
+    },
+  },
 };
 </script>
-
 
 <style scoped></style>

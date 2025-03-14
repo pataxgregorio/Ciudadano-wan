@@ -18,10 +18,10 @@ module.exports = configure(function (/* ctx */) {
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
     // https://v2.quasar.dev/quasar-cli-vite/boot-files
-    boot: ["axios", "pinia"],
+    boot: ["axios", "pinia", "flowbite"],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css
-    css: ["app.scss"],
+    css: ["app.scss", "tailwind.css"],
 
     // https://github.com/quasarframework/quasar/tree/dev/extras
     extras: [
@@ -83,6 +83,16 @@ module.exports = configure(function (/* ctx */) {
       headers: {
         "Access-Control-Allow-Origin": "http://156.235.91.67:8081",
         "Access-Control-Allow-Credentials": true,
+      },
+      proxy: {
+        "/api": {
+          // Prefijo para tus endpoints
+          target: "http://192.168.0.113:3000", // URL de tu backend
+          changeOrigin: true, // Necesario para evitar errores CORS
+          pathRewrite: {
+            "^/api": "", // Opcional: Elimina el prefijo /api de la URL de la solicitud
+          },
+        },
       },
     },
 
