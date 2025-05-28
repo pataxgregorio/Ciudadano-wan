@@ -40,7 +40,7 @@ export default {
     async function filtrar() {
       try {
         const response = await axios.get(
-          "http://192.168.0.113:7001/solicitud/totalFinalizadasConFecha",
+          "http://156.235.91.67:4000/solicitud/totalFinalizadasConFecha",
           {
             params: {
               fecha_desde: fechaDesde.value,
@@ -50,7 +50,7 @@ export default {
         );
 
         const responseBar = await axios.get(
-          "http://192.168.0.113:7001/solicitud/solicitudTipo2PorFecha",
+          "http://156.235.91.67:4000/solicitud/solicitudTipo2PorFecha",
           {
             params: {
               fecha_desde: fechaDesde.value,
@@ -60,7 +60,7 @@ export default {
         );
 
         const responseGauge = await axios.get(
-          "http://192.168.0.113:7001/solicitud/solicitudTipo5PorFecha",
+          "http://156.235.91.67:4000/solicitud/solicitudTipo5PorFecha",
           {
             params: {
               fecha_desde: fechaDesde.value,
@@ -84,7 +84,7 @@ export default {
       isLoading.value = true;
       try {
         const response = await axios.get(
-          "http://192.168.0.113:7001/solicitud/totalFinalizadas6"
+          "http://156.235.91.67:4000/solicitud/totalFinalizadas6"
         );
         const data = response.data;
 

@@ -87,7 +87,7 @@ module.exports = configure(function (/* ctx */) {
       proxy: {
         "/api": {
           // Prefijo para tus endpoints
-          target: "http://192.168.0.113:3000", // URL de tu backend
+          target: "http://156.235.91.67:3000", // URL de tu backend
           changeOrigin: true, // Necesario para evitar errores CORS
           pathRewrite: {
             "^/api": "", // Opcional: Elimina el prefijo /api de la URL de la solicitud

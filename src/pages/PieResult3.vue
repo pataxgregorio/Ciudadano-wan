@@ -29,7 +29,7 @@ export default {
     async function fetchData() {
       try {
         const response = await axios.get(
-          "http://192.168.0.113:7001/solicitud/medicinacomunas"
+          "http://156.235.91.67:4000/solicitud/medicinacomunas"
         );
         return processChartData(response.data);
       } catch (error) {

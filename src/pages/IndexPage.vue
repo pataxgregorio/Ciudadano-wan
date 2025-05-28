@@ -38,10 +38,18 @@
         <FinalizadasTable4 :rows2="finalizadasRows4" titulo="Últimas Salidas de Medicinas" />
       </div>
     </div> -->
-    <img src="/images/logo-rafael-torrealba.png" class="logo-rafael-torrealba">
+    <img
+      src="/images/logo-rafael-torrealba.png"
+      class="logo-rafael-torrealba"
+    />
   </q-page>
   <q-inner-loading :showing="isLoading">
-    <img class="loader" src="/images/loader.png" alt="Cargando..." width="200px" />
+    <img
+      class="loader"
+      src="/images/loader.png"
+      alt="Cargando..."
+      width="200px"
+    />
   </q-inner-loading>
 </template>
 
@@ -90,78 +98,95 @@ export default {
     async function filtrar() {
       isLoading.value = true;
       try {
-        const [response, responseBar, responsePie, responsePie2, responseMedicina] =
-          await Promise.all([
-            axios.get(
-              "http://192.168.0.113:7001/solicitud/totalFinalizadasConFecha",
-              {
-                params: {
-                  fecha_desde: fechaDesde.value,
-                  fecha_hasta: fechaHasta.value,
-                },
-              }
-            ),
-            axios.get(
-              "http://192.168.0.113:7001/solicitud/solicitudTipo2PorFecha",
-              {
-                params: {
-                  fecha_desde: fechaDesde.value,
-                  fecha_hasta: fechaHasta.value,
-                },
-              }
-            ),
-            axios.get(
-              "http://192.168.0.113:7001/solicitud/solicitudTipo4PorFecha",
-              {
-                params: {
-                  fecha_desde: fechaDesde.value,
-                  fecha_hasta: fechaHasta.value,
-                },
-              }
-            ),
-            axios.get("http://192.168.0.113:7001/seguimiento/getproductos2", {
+        const [
+          response,
+          responseBar,
+          responsePie,
+          responsePie2,
+          responseMedicina,
+        ] = await Promise.all([
+          axios.get(
+            "http://156.235.91.67:4000/solicitud/totalFinalizadasConFecha",
+            {
               params: {
                 fecha_desde: fechaDesde.value,
                 fecha_hasta: fechaHasta.value,
               },
-            }),
-            axios.get("http://192.168.0.113:7001/solicitud/medicinacomunasFecha", {
+            }
+          ),
+          axios.get(
+            "http://156.235.91.67:4000/solicitud/solicitudTipo2PorFecha",
+            {
               params: {
                 fecha_desde: fechaDesde.value,
                 fecha_hasta: fechaHasta.value,
               },
-            }),
-            axios.get("http://192.168.0.113:7001/solicitud/totalFinalizadas6Fecha", {
+            }
+          ),
+          axios.get(
+            "http://156.235.91.67:4000/solicitud/solicitudTipo4PorFecha",
+            {
               params: {
                 fecha_desde: fechaDesde.value,
                 fecha_hasta: fechaHasta.value,
               },
-            })
-          ]);
+            }
+          ),
+          axios.get("http://156.235.91.67:4000/seguimiento/getproductos2", {
+            params: {
+              fecha_desde: fechaDesde.value,
+              fecha_hasta: fechaHasta.value,
+            },
+          }),
+          axios.get(
+            "http://156.235.91.67:4000/solicitud/medicinacomunasFecha",
+            {
+              params: {
+                fecha_desde: fechaDesde.value,
+                fecha_hasta: fechaHasta.value,
+              },
+            }
+          ),
+          axios.get(
+            "http://156.235.91.67:4000/solicitud/totalFinalizadas6Fecha",
+            {
+              params: {
+                fecha_desde: fechaDesde.value,
+                fecha_hasta: fechaHasta.value,
+              },
+            }
+          ),
+        ]);
 
         chartData.value = processChartData(responseBar.data);
         chartData2.value = processChartData(responsePie.data);
         chartData3.value = processChartData(responsePie2.data);
         chartData5.value = processChartData2(responseMedicina.data);
-        const responsesalidaMedicina = await axios.get("http://192.168.0.113:7001/solicitud/totalFinalizadas6Fecha", {
-          params: {
-            fecha_desde: fechaDesde.value,
-            fecha_hasta: fechaHasta.value,
-          },
-        });
+        const responsesalidaMedicina = await axios.get(
+          "http://156.235.91.67:4000/solicitud/totalFinalizadas6Fecha",
+          {
+            params: {
+              fecha_desde: fechaDesde.value,
+              fecha_hasta: fechaHasta.value,
+            },
+          }
+        );
 
         // Agrupar las salidas por nombre de medicina
         const salidasPorMedicina = {};
-        responsesalidaMedicina.data.forEach(item => {
+        responsesalidaMedicina.data.forEach((item) => {
           const nombreMedicina = item.nombre;
-          salidasPorMedicina[nombreMedicina] = (salidasPorMedicina[nombreMedicina] || 0) + item.cantidad;
+          salidasPorMedicina[nombreMedicina] =
+            (salidasPorMedicina[nombreMedicina] || 0) + item.cantidad;
         });
 
         // Transformar el objeto en un array de objetos
-        const dataChart6 = Object.entries(salidasPorMedicina).map(([name, value]) => ({
-          value: value,
-          name: name
-        }));
+        const dataChart6 = Object.entries(salidasPorMedicina).map(
+          ([name, value]) => ({
+            value: value,
+            name: name,
+          })
+        );
 
         chartData6.value = dataChart6;
         finalizadasRows.value = Object.entries(response.data).map(
@@ -178,7 +203,7 @@ export default {
     async function obtenerFinalizadas() {
       try {
         const response = await axios.get(
-          "http://192.168.0.113:7001/solicitud/totalFinalizadas3"
+          "http://156.235.91.67:4000/solicitud/totalFinalizadas3"
         );
         return Object.entries(response.data).map(([name, value]) => ({
           name,
@@ -193,7 +218,7 @@ export default {
     async function obtenerFinalizadas2() {
       try {
         const response = await axios.get(
-          "http://192.168.0.113:7001/solicitud/totalFinalizadas5"
+          "http://156.235.91.67:4000/solicitud/totalFinalizadas5"
         );
         return response.data.map((item) => ({
           nombre: item.nombre,
@@ -214,7 +239,7 @@ export default {
     async function obtenerFinalizadas3() {
       try {
         const response = await axios.get(
-          "http://192.168.0.113:7001/solicitud/totalFinalizadas4"
+          "http://156.235.91.67:4000/solicitud/totalFinalizadas4"
         );
         return response.data.map((item) => ({
           comuna: item.comuna,
@@ -231,7 +256,7 @@ export default {
     async function obtenerDatos() {
       try {
         const response = await axios.get(
-          "http://192.168.0.113:7001/solicitud/totalFinalizadas6"
+          "http://156.235.91.67:4000/solicitud/totalFinalizadas6"
         );
         return response.data.map((item) => ({
           solicitud_id: item.solicitud_salud_id,
@@ -253,7 +278,7 @@ export default {
     async function fetchDataForChart1() {
       try {
         const response = await axios.get(
-          "http://192.168.0.113:7001/solicitud/solicitudTipo2"
+          "http://156.235.91.67:4000/solicitud/solicitudTipo2"
         );
         return processChartData(response.data);
       } catch (error) {
@@ -265,7 +290,7 @@ export default {
     async function fetchDataForChart2() {
       try {
         const response = await axios.get(
-          "http://192.168.0.113:7001/solicitud/solicitudTipo4"
+          "http://156.235.91.67:4000/solicitud/solicitudTipo4"
         );
         return processChartData(response.data);
       } catch (error) {
@@ -277,7 +302,7 @@ export default {
     async function fetchDataForChart3() {
       try {
         const response = await axios.get(
-          "http://192.168.0.113:7001/seguimiento/getproductos"
+          "http://156.235.91.67:4000/seguimiento/getproductos"
         );
         return response.data;
       } catch (error) {
@@ -289,7 +314,7 @@ export default {
     async function fetchDataForChart5() {
       try {
         const response = await axios.get(
-          "http://192.168.0.113:7001/solicitud/medicinacomunas"
+          "http://156.235.91.67:4000/solicitud/medicinacomunas"
         );
         return processChartData2(response.data);
       } catch (error) {

@@ -15,19 +15,41 @@
 
       <div class="botones-periodo">
         <label>
-          <input type="checkbox" v-model="periodoSeleccionado" value="dia" @change="seleccionarPeriodo" /> 1 Día
+          <input
+            type="checkbox"
+            v-model="periodoSeleccionado"
+            value="dia"
+            @change="seleccionarPeriodo"
+          />
+          1 Día
         </label>
         <label>
-          <input type="checkbox" v-model="periodoSeleccionado" value="semana" @change="seleccionarPeriodo" /> 1 Semana
+          <input
+            type="checkbox"
+            v-model="periodoSeleccionado"
+            value="semana"
+            @change="seleccionarPeriodo"
+          />
+          1 Semana
         </label>
         <label>
-          <input type="checkbox" v-model="periodoSeleccionado" value="mes" @change="seleccionarPeriodo" /> 1 Mes
+          <input
+            type="checkbox"
+            v-model="periodoSeleccionado"
+            value="mes"
+            @change="seleccionarPeriodo"
+          />
+          1 Mes
         </label>
       </div>
 
       <div class="Comunas">
         <p class="negrita">Comuna:</p>
-        <select v-model="selectedComunaId" class="comuna-select" @change="onComunaChange">
+        <select
+          v-model="selectedComunaId"
+          class="comuna-select"
+          @change="onComunaChange"
+        >
           <option value="">Seleccione una Comuna</option>
           <option v-for="comuna in comunas" :key="comuna.id" :value="comuna.id">
             {{ comuna.codigo }}
@@ -38,7 +60,11 @@
         <p class="negrita">Comunidad:</p>
         <select v-model="selectedComunidadId" class="comunidad-select">
           <option value="">Seleccione una Comunidad</option>
-          <option v-for="comunidad in filteredComunidades" :key="comunidad.id" :value="comunidad.id">
+          <option
+            v-for="comunidad in filteredComunidades"
+            :key="comunidad.id"
+            :value="comunidad.id"
+          >
             {{ comunidad.nombre }}
           </option>
         </select>
@@ -61,7 +87,10 @@
             </p>
           </div>
           <div class="total-general" v-if="solicitudTotal">
-            <p>{{ solicitudTotal.tipo_subsolicitud }} = {{ solicitudTotal.total }}</p>
+            <p>
+              {{ solicitudTotal.tipo_subsolicitud }} =
+              {{ solicitudTotal.total }}
+            </p>
           </div>
         </div>
       </div>
@@ -71,14 +100,14 @@
 
 <script>
 import axios from "axios";
-import { ref, computed } from 'vue';
+import { ref, computed } from "vue";
 
 export default {
   data() {
     return {
       comunas: [],
       comunidades: [],
-      solicitudes: [],  // Original array from the API
+      solicitudes: [], // Original array from the API
       selectedComunaId: null,
       selectedComunidadId: null,
       fechaDesde: null,
@@ -95,13 +124,15 @@ export default {
   computed: {
     solicitudesSinTotal() {
       // Filter out the "TOTAL" object and return only the other solicitudes
-      return this.solicitudes.filter(s => s.tipo_subsolicitud !== 'TOTAL');
-    }
+      return this.solicitudes.filter((s) => s.tipo_subsolicitud !== "TOTAL");
+    },
   },
   async mounted() {
     try {
-      const response = await axios.get("http://192.168.0.113:7001/getComunas");
-      const response2 = await axios.get("http://192.168.0.113:7001/getComunidades");
+      const response = await axios.get("http://156.235.91.67:4000/getComunas");
+      const response2 = await axios.get(
+        "http://156.235.91.67:4000/getComunidades"
+      );
       this.comunas = response.data;
       this.comunidades = response2.data;
     } catch (error) {
@@ -111,12 +142,14 @@ export default {
   watch: {
     selectedComunaId(newComunaId) {
       if (newComunaId) {
-        this.filteredComunidades = this.comunidades.filter(comunidad => comunidad.comuna_id === newComunaId);
+        this.filteredComunidades = this.comunidades.filter(
+          (comunidad) => comunidad.comuna_id === newComunaId
+        );
       } else {
         this.filteredComunidades = [];
       }
       this.selectedComunidadId = null;
-    }
+    },
   },
   methods: {
     onComunaChange() {
@@ -126,7 +159,9 @@ export default {
     },
     seleccionarPeriodo() {
       if (this.periodoSeleccionado.length > 1) {
-        this.periodoSeleccionado = [this.periodoSeleccionado[this.periodoSeleccionado.length - 1]];
+        this.periodoSeleccionado = [
+          this.periodoSeleccionado[this.periodoSeleccionado.length - 1],
+        ];
       }
       const periodo = this.periodoSeleccionado[0];
 
@@ -149,8 +184,8 @@ export default {
     },
     formatDate(date) {
       const year = date.getFullYear();
-      const month = String(date.getMonth() + 1).padStart(2, '0');
-      const day = String(date.getDate()).padStart(2, '0');
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
       return `${year}-${month}-${day}`;
     },
     async filtrar() {
@@ -159,7 +194,7 @@ export default {
         return;
       }
 
-      let url = `http://192.168.0.113:7001/solicitudComunaTotalResumen/`;
+      let url = `http://156.235.91.67:4000/solicitudComunaTotalResumen/`;
       let params = {
         fecha_desde: this.fechaDesde,
         fecha_hasta: this.fechaHasta,
@@ -176,15 +211,22 @@ export default {
         this.solicitudes = response.data;
 
         // Extract and store the "TOTAL" object
-        this.solicitudTotal = this.solicitudes.find(s => s.tipo_subsolicitud === 'TOTAL');
+        this.solicitudTotal = this.solicitudes.find(
+          (s) => s.tipo_subsolicitud === "TOTAL"
+        );
 
-
-        this.comunaNombre = this.comunas.find(c => c.id === this.selectedComunaId)?.codigo || "Comuna Desconocida";
-        this.comunidadNombre = this.comunidades.find(c => c.id === this.selectedComunidadId)?.nombre || "";
+        this.comunaNombre =
+          this.comunas.find((c) => c.id === this.selectedComunaId)?.codigo ||
+          "Comuna Desconocida";
+        this.comunidadNombre =
+          this.comunidades.find((c) => c.id === this.selectedComunidadId)
+            ?.nombre || "";
         this.mostrarModal = true;
       } catch (error) {
         console.error("Error al obtener los detalles de la solicitud:", error);
-        alert("Error al obtener los detalles de la solicitud. Por favor, inténtalo de nuevo más tarde.");
+        alert(
+          "Error al obtener los detalles de la solicitud. Por favor, inténtalo de nuevo más tarde."
+        );
       }
     },
     cerrarModal() {
@@ -200,13 +242,11 @@ export default {
   color: black;
 }
 
-
 /* Titulos */
 
 .header h1 {
   font-size: 30px;
 }
-
 
 .tituloComunas {
   font-size: 25px;
@@ -248,12 +288,10 @@ export default {
   flex-direction: column;
 }
 
-
 .comunas {
   display: flex;
   justify-content: flex-end;
 }
-
 
 .solicitudes {
   display: grid;
@@ -301,7 +339,6 @@ export default {
   font-size: 20px;
   font-weight: bold;
   margin-left: 20px;
-
 }
 
 .input,
@@ -393,9 +430,7 @@ export default {
   /* Limit the modal Height*/
   overflow-y: auto;
   /* Add scroll if content overflows vertically*/
-
 }
-
 
 .modal-header {
   display: flex;
@@ -635,7 +670,7 @@ export default {
   background-color: rgb(243, 243, 243);
 }
 
-@media(min-width: 768px) {
+@media (min-width: 768px) {
   .card-solicitudes {
     min-width: 80%;
     min-height: 40%;
@@ -692,15 +727,13 @@ export default {
   .fechas {
     flex-direction: column;
   }
-
 }
 
-@media(min-width: 768px) {
+@media (min-width: 768px) {
   .card-solicitudes {
     min-width: 80%;
     min-height: 40%;
   }
-
 }
 
 @media (max-width: 768px) {
@@ -748,6 +781,5 @@ export default {
   .fechas {
     flex-direction: column;
   }
-
 }
 </style>

@@ -15,7 +15,11 @@
 
       <div class="Comunas">
         <p class="negrita">Comuna:</p>
-        <select v-model="selectedComunaId" class="comuna-select" @change="onComunaChange">
+        <select
+          v-model="selectedComunaId"
+          class="comuna-select"
+          @change="onComunaChange"
+        >
           <option value="">Seleccione una Comuna</option>
           <option v-for="comuna in comunas" :key="comuna.id" :value="comuna.id">
             {{ comuna.codigo }}
@@ -34,17 +38,17 @@
         </p>
       </div>
       <div class="total-general" v-if="solicitudTotal">
-        <p>{{ solicitudTotal.tipo_subsolicitud }} = {{ solicitudTotal.total }}</p>
+        <p>
+          {{ solicitudTotal.tipo_subsolicitud }} = {{ solicitudTotal.total }}
+        </p>
       </div>
     </div>
-
-
   </div>
 </template>
 
 <script>
 import axios from "axios";
-import { ref, computed } from 'vue';
+import { ref, computed } from "vue";
 
 export default {
   data() {
@@ -68,13 +72,15 @@ export default {
   },
   computed: {
     solicitudesSinTotal() {
-      return this.solicitudes.filter(s => s.tipo_subsolicitud !== 'TOTAL');
-    }
+      return this.solicitudes.filter((s) => s.tipo_subsolicitud !== "TOTAL");
+    },
   },
   async mounted() {
     try {
-      const response = await axios.get("http://192.168.0.113:7001/getComunas");
-      const response2 = await axios.get("http://192.168.0.113:7001/getComunidades");
+      const response = await axios.get("http://156.235.91.67:4000/getComunas");
+      const response2 = await axios.get(
+        "http://156.235.91.67:4000/getComunidades"
+      );
       this.comunas = response.data;
       this.comunidades = response2.data;
     } catch (error) {
@@ -84,12 +90,14 @@ export default {
   watch: {
     selectedComunaId(newComunaId) {
       if (newComunaId) {
-        this.filteredComunidades = this.comunidades.filter(comunidad => comunidad.comuna_id === newComunaId);
+        this.filteredComunidades = this.comunidades.filter(
+          (comunidad) => comunidad.comuna_id === newComunaId
+        );
       } else {
         this.filteredComunidades = [];
       }
       this.selectedComunidadId = null;
-    }
+    },
   },
   methods: {
     onComunaChange() {
@@ -100,7 +108,9 @@ export default {
     },
     seleccionarPeriodo() {
       if (this.periodoSeleccionado.length > 1) {
-        this.periodoSeleccionado = [this.periodoSeleccionado[this.periodoSeleccionado.length - 1]];
+        this.periodoSeleccionado = [
+          this.periodoSeleccionado[this.periodoSeleccionado.length - 1],
+        ];
       }
       const periodo = this.periodoSeleccionado[0];
 
@@ -123,8 +133,8 @@ export default {
     },
     formatDate(date) {
       const year = date.getFullYear();
-      const month = String(date.getMonth() + 1).padStart(2, '0');
-      const day = String(date.getDate()).padStart(2, '0');
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
       return `${year}-${month}-${day}`;
     },
     async filtrar() {
@@ -133,7 +143,7 @@ export default {
         return;
       }
 
-      let url = `http://192.168.0.113:7001/solicitudComunaTotalResumen/`;
+      let url = `http://156.235.91.67:4000/solicitudComunaTotalResumen/`;
       let params = {
         fecha_desde: this.fechaDesde,
         fecha_hasta: this.fechaHasta,
@@ -147,15 +157,22 @@ export default {
       try {
         const response = await axios.get(url, { params });
         this.solicitudes = response.data;
-        this.solicitudTotal = this.solicitudes.find(s => s.tipo_subsolicitud === 'TOTAL');
-        this.comunaNombre = this.comunas.find(c => c.id === this.selectedComunaId)?.codigo || "Comuna Desconocida";
-        this.comunidadNombre = this.comunidades.find(c => c.id === this.selectedComunidadId)?.nombre || "";
+        this.solicitudTotal = this.solicitudes.find(
+          (s) => s.tipo_subsolicitud === "TOTAL"
+        );
+        this.comunaNombre =
+          this.comunas.find((c) => c.id === this.selectedComunaId)?.codigo ||
+          "Comuna Desconocida";
+        this.comunidadNombre =
+          this.comunidades.find((c) => c.id === this.selectedComunidadId)
+            ?.nombre || "";
         // this.mostrarModal = true; // Comentado: Ya no se muestra el modal
         this.mostrarResultados = true; // Mostrar los resultados fuera del modal
-
       } catch (error) {
         console.error("Error al obtener los detalles de la solicitud:", error);
-        alert("Error al obtener los detalles de la solicitud. Por favor, inténtalo de nuevo más tarde.");
+        alert(
+          "Error al obtener los detalles de la solicitud. Por favor, inténtalo de nuevo más tarde."
+        );
       }
     },
     /*  cerrarModal() {   //Comentado ya que no se usa el modal
@@ -376,7 +393,7 @@ export default {
 } */
 
 /* Media queries para responsividad */
-@media(min-width: 768px) {
+@media (min-width: 768px) {
   .card-solicitudes {
     min-width: 80%;
     min-height: 40%;
@@ -388,7 +405,6 @@ export default {
     grid-template-columns: repeat(2, 1fr);
     margin-left: 20px;
     /* Se movió aquí desde el estilo .solicitudes general */
-
   }
 
   .tituloComunas {

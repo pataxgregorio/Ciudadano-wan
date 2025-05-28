@@ -31,7 +31,7 @@ export default {
     async function fetchDataForChart2() {
       try {
         const response = await axios.get(
-          "http://192.168.0.113:7001/seguimiento/getproductos"
+          "http://156.235.91.67:4000/seguimiento/getproductos"
         );
         const data = response.data;
         console.log("respuesta de la aipi", data);

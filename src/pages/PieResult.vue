@@ -42,7 +42,7 @@ export default {
     async function filtrar() {
       try {
         const response = await axios.get(
-          "http://192.168.0.113:7001/solicitud/totalFinalizadasConFecha",
+          "http://156.235.91.67:4000/solicitud/totalFinalizadasConFecha",
           {
             params: {
               fecha_desde: fechaDesde.value,
@@ -52,7 +52,7 @@ export default {
         );
 
         const responseBar = await axios.get(
-          "http://192.168.0.113:7001/solicitud/solicitudTipo2PorFecha",
+          "http://156.235.91.67:4000/solicitud/solicitudTipo2PorFecha",
           {
             params: {
               fecha_desde: fechaDesde.value,
@@ -61,7 +61,7 @@ export default {
           }
         );
 
-        // const responsePie = await axios.get('http://192.168.0.113:7001/solicitud/solicitudTipo4PorFecha', {
+        // const responsePie = await axios.get('http://156.235.91.67:4000/solicitud/solicitudTipo4PorFecha', {
         //   params: {
         //     fecha_desde: fechaDesde.value,
         //     fecha_hasta: fechaHasta.value
@@ -69,7 +69,7 @@ export default {
         // });
 
         const responseGauge = await axios.get(
-          "http://192.168.0.113:7001/solicitud/solicitudTipo5PorFecha",
+          "http://156.235.91.67:4000/solicitud/solicitudTipo5PorFecha",
           {
             params: {
               fecha_desde: fechaDesde.value,
@@ -92,7 +92,7 @@ export default {
     async function obtenerFinalizadas() {
       try {
         const response = await axios.get(
-          "http://192.168.0.113:7001/solicitud/totalFinalizadas3"
+          "http://156.235.91.67:4000/solicitud/totalFinalizadas3"
         );
         const data = response.data;
         return (finalizadasRows.value = Object.entries(data).map(
@@ -105,7 +105,7 @@ export default {
     async function fetchDataForChart1() {
       try {
         const response = await axios.get(
-          "http://192.168.0.113:7001/solicitud/solicitudTipo2"
+          "http://156.235.91.67:4000/solicitud/solicitudTipo2"
         );
         return processChartData(response.data);
       } catch (error) {
@@ -117,7 +117,7 @@ export default {
     async function fetchDataForChart2() {
       try {
         const response = await axios.get(
-          "http://192.168.0.113:7001/solicitud/solicitudTipo4"
+          "http://156.235.91.67:4000/solicitud/solicitudTipo4"
         );
         return processChartData(response.data);
       } catch (error) {
@@ -129,7 +129,7 @@ export default {
     async function fetchDataForChart3() {
       try {
         const response = await axios.get(
-          "http://192.168.0.113:7001/solicitud/solicitudTipo4"
+          "http://156.235.91.67:4000/solicitud/solicitudTipo4"
         );
         return processChartData(response.data);
       } catch (error) {
@@ -141,7 +141,7 @@ export default {
     async function fetchDataForChart4() {
       try {
         const response = await axios.get(
-          "http://192.168.0.113:7001/solicitud/solicitudTipo5"
+          "http://156.235.91.67:4000/solicitud/solicitudTipo5"
         );
         return response.data;
       } catch (error) {

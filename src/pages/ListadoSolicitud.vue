@@ -22,7 +22,15 @@
       </div>
     </div>
     <div class="q-pa-md">
-      <q-table flat bordered title="Tabla" dense :rows="solicitudesRows" :columns="columns" row-key="name" />
+      <q-table
+        flat
+        bordered
+        title="Tabla"
+        dense
+        :rows="solicitudesRows"
+        :columns="columns"
+        row-key="name"
+      />
     </div>
     <!-- <div class="botones">
       <q-btn color="black" @click="filtrarPorEstado(1)">
@@ -35,7 +43,12 @@
         <li>En Análisis</li>
       </q-btn>
     </div> -->
-    <q-btn class="imprimir" color="black" label="Imprimir" @click="imprimir"></q-btn>
+    <q-btn
+      class="imprimir"
+      color="black"
+      label="Imprimir"
+      @click="imprimir"
+    ></q-btn>
   </q-page>
 </template>
 
@@ -44,7 +57,7 @@ import { ref, onMounted } from "vue";
 import axios from "axios";
 
 const getComunas = async () => {
-  const response = await axios.get("http://192.168.0.113:7001/getComunas");
+  const response = await axios.get("http://156.235.91.67:4000/getComunas");
   console.log(response.data);
   return response.data;
 };
@@ -74,7 +87,19 @@ export default {
 
     async function imprimir(params = {}) {
       try {
-        const url = "http://192.168.0.113:7001/solicitud/imprimirWAN?" + "fechaDesde=" + fechaDesde.value + "&" + "fechaHasta=" + fechaHasta.value + "&" + "status=" + (params.status || null) + "&" + "comuna_id=" + selectedComunaId.value;
+        const url =
+          "http://156.235.91.67:4000/solicitud/imprimirWAN?" +
+          "fechaDesde=" +
+          fechaDesde.value +
+          "&" +
+          "fechaHasta=" +
+          fechaHasta.value +
+          "&" +
+          "status=" +
+          (params.status || null) +
+          "&" +
+          "comuna_id=" +
+          selectedComunaId.value;
 
         window.open(url, "_blank");
       } catch (error) {
@@ -92,7 +117,7 @@ export default {
         };
 
         const response = await axios.get(
-          "http://192.168.0.113:7001/solicitud/getSolicitudesWAN",
+          "http://156.235.91.67:4000/solicitud/getSolicitudesWAN",
           {
             params: queryParams,
           }

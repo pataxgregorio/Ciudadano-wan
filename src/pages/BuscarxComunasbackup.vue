@@ -1,19 +1,32 @@
 <template>
   <div class="container">
     <div class="header">
-      <div class="logo"><img src="/images/logo.png" alt="" width="200px"></div>
+      <div class="logo">
+        <img src="/images/logo.png" alt="" width="200px" />
+      </div>
       <div class="titulo">
         <p class="titulo-header">Reporte Solicitudes</p>
       </div>
-      <div class="logo"><img src="/images/logoSIA.png" alt="" width="200px"></div>
+      <div class="logo">
+        <img src="/images/logoSIA.png" alt="" width="200px" />
+      </div>
     </div>
     <section class="content">
       <div class="tituloComunas">Resumen de Solicitudes por Comunas:</div>
       <div class="resumenComunas">
         <div class="solicitudes">
-          <div v-for="solicitud in solicitudesxcomunas" :key="solicitud.id" class="solicitud">
-            <a href='/#/buscarcomunas' @click.prevent="verSolicitudes(solicitud.id, solicitud.comuna)">
-              <p class="nombre-comuna-card"><strong>{{ solicitud.comuna }}</strong></p>
+          <div
+            v-for="solicitud in solicitudesxcomunas"
+            :key="solicitud.id"
+            class="solicitud"
+          >
+            <a
+              href="/#/buscarcomunas"
+              @click.prevent="verSolicitudes(solicitud.id, solicitud.comuna)"
+            >
+              <p class="nombre-comuna-card">
+                <strong>{{ solicitud.comuna }}</strong>
+              </p>
               <p class="total-comuna-card">{{ solicitud.TOTAL_SOLICITUD }}</p>
             </a>
           </div>
@@ -24,21 +37,26 @@
     <q-dialog v-model="mostrarModal">
       <q-card class="card-solicitudes">
         <q-card-section class="card-solicitudes-modal">
-          <div class="text-h6">Solicitudes de la Comuna: <strong> {{ comunaNombre }} </strong></div>
+          <div class="text-h6">
+            Solicitudes de la Comuna: <strong> {{ comunaNombre }} </strong>
+          </div>
         </q-card-section>
         <q-card-section class="q-pt-none">
           <div class="solicitudes-modal">
-            <q-card v-for="solicitudes in solicitudes" :key="solicitudes.id" class="my-card">
-              <q-card-section class="form section" style="margin-top: 10px;">
+            <q-card
+              v-for="solicitudes in solicitudes"
+              :key="solicitudes.id"
+              class="my-card"
+            >
+              <q-card-section class="form section" style="margin-top: 10px">
                 <div class="seccion-1-ver">
                   <li>
-                    <span class="negrita">Tipo de Solicitud:</span> {{ solicitudes.tipo_subsolicitud }}
+                    <span class="negrita">Tipo de Solicitud:</span>
+                    {{ solicitudes.tipo_subsolicitud }}
                   </li>
                   <li>
                     <span class="negrita">Total:</span> {{ solicitudes.total }}
                   </li>
-
-
                 </div>
               </q-card-section>
             </q-card>
@@ -52,7 +70,8 @@
   </div>
 </template>
 
-<script>1
+<script>
+1;
 import axios from "axios";
 
 export default {
@@ -68,8 +87,10 @@ export default {
   },
   async mounted() {
     try {
-      const response = await axios.get("http://192.168.0.113:7001/getComunas");
-      const responseSolicitudes = await axios.get("http://192.168.0.113:7001/getSolicitudporComunasWAN");
+      const response = await axios.get("http://156.235.91.67:4000/getComunas");
+      const responseSolicitudes = await axios.get(
+        "http://156.235.91.67:4000/getSolicitudporComunasWAN"
+      );
       this.comunas = response.data;
       this.solicitudesxcomunas = responseSolicitudes.data;
     } catch (error) {
@@ -82,15 +103,21 @@ export default {
       this.mostrarModal = true;
       this.comunaNombre = comunaNombre;
 
-      axios.get(`http://192.168.0.113:7001/solicitudComunaTotalResumen/?id=${this.comunaId}`)
-        .then(response => {
+      axios
+        .get(
+          `http://156.235.91.67:4000/solicitudComunaTotalResumen/?id=${this.comunaId}`
+        )
+        .then((response) => {
           this.solicitudes = response.data;
         })
-        .catch(error => {
-          console.error("Error al obtener los detalles de la solicitud:", error);
+        .catch((error) => {
+          console.error(
+            "Error al obtener los detalles de la solicitud:",
+            error
+          );
         });
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -146,7 +173,6 @@ export default {
   font-weight: bold;
 }
 
-
 .seccion-1-ver {
   display: flex;
   flex-direction: column;
@@ -160,7 +186,6 @@ export default {
   list-style: none;
 }
 
-
 .seccion-3-ver p {
   display: flex;
   flex-direction: column;
@@ -168,7 +193,7 @@ export default {
   max-width: 120px;
 }
 
-@media(min-width: 768px) {
+@media (min-width: 768px) {
   .card-solicitudes {
     min-width: 80%;
     min-height: 40%;

@@ -6,9 +6,19 @@
           <div class="text-h6 titulo">INICIAR SESIÓN</div>
 
           <q-input v-model="email" label="Email" class="input" />
-          <q-input v-model="password" type="password" label="Clave" class="input" />
+          <q-input
+            v-model="password"
+            type="password"
+            label="Clave"
+            class="input"
+          />
 
-          <q-btn label="Ingresar" color="primary" @click="login" class="boton" />
+          <q-btn
+            label="Ingresar"
+            color="primary"
+            @click="login"
+            class="boton"
+          />
 
           <div v-if="error" class="text-negative">{{ error }}</div>
         </q-card-section>
@@ -33,7 +43,7 @@ async function login() {
   error.value = null; // Limpiar mensaje de error anterior
 
   try {
-    const response = await axios.post("http://192.168.0.113:3000/login", {
+    const response = await axios.post("http://156.235.91.67:3000/login", {
       email: email.value, // Usa "email"
       password: password.value,
     });
